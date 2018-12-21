@@ -21,4 +21,11 @@ class AndroidModel extends Object {
 
   factory AndroidModel.fromJson(Map<String, dynamic> json) =>
       _$AndroidModelFromJson(json);
+
+  @override
+  String toString() {
+    return 'AndroidModel{id: $id, createdAt: $createdAt, desc: $desc, images: $images, publishedAt: $publishedAt, source: $source, type: $type, url: $url, used: $used, who: $who}';
+  }
+
+
 }

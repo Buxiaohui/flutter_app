@@ -19,15 +19,14 @@ class ResultsModel {
   List<FreeRecomModel> mFreeRecomModels;
   List<BenifitModel> mBenifitModels;
 
-  ResultsModel(
-      this.Android,
-      this.App,
-      this.iOS,
-      this.mRelaxVideoModels,
-      this.mStretchResModels,
-      this.mFreeRecomModels,
-      this.mBenifitModels);
+  ResultsModel(this.Android, this.App, this.iOS, this.mRelaxVideoModels,
+      this.mStretchResModels, this.mFreeRecomModels, this.mBenifitModels);
 
   factory ResultsModel.fromJson(Map<String, dynamic> json) =>
       _$ResultsModelFromJson(json);
+
+  @override
+  String toString() {
+    return 'ResultsModel{Android: $Android, App: $App, iOS: $iOS, mRelaxVideoModels: $mRelaxVideoModels, mStretchResModels: $mStretchResModels, mFreeRecomModels: $mFreeRecomModels, mBenifitModels: $mBenifitModels}';
+  }
 }

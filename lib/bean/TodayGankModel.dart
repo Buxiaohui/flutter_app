@@ -13,4 +13,11 @@ class TodayGankModel extends Object {
 
   factory TodayGankModel.fromJson(Map<String, dynamic> json) =>
       _$TodayGankModelFromJson(json);
+
+  @override
+  String toString() {
+    return 'TodayGankModel{category: $category, error: $error, results: $results}';
+  }
+
+
 }
