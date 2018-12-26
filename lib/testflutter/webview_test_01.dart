@@ -17,18 +17,55 @@ class _VideoAppState extends State<WebViewApp> {
 
   @override
   Widget build(BuildContext context) {
-    //return new WillPopScope(child: null, onWillPop: null);
     return new WillPopScope(
-        child: new MaterialApp(
+        child: MaterialApp(
           routes: {
             "/": (_) => new WebviewScaffold(
-                  url: "https://v.douyin.com/8AQBdu/",
-                  appBar: new AppBar(
+                  url: "https://www.baidu.com",
+                  appBar: AppBar(
+                    leading: Builder(
+                      builder: (BuildContext context) {
+                        return IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () {
+                            print("onback press");
+                            // Navigator.of(context).dispose();
+                            // Navigator.of(context).pop(true);
+                          },
+                          tooltip: MaterialLocalizations.of(context)
+                              .openAppDrawerTooltip,
+                        );
+                      },
+                    ),
                     title: new Text("Widget webview"),
                   ),
                 ),
           },
         ),
-        onWillPop: null);
+        onWillPop: () {
+          return _onWillPop();
+        });
   }
+
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) =>
+      new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    ) ?? false;
+  }
+
 }

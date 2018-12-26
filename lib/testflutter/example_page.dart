@@ -68,84 +68,108 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-//          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Row(
-              children: <Widget>[
-                Text(
-                  'You have pushed the button this many times:',
-                  textDirection: TextDirection.ltr,
-                ),
-                new Image.asset(
-                  'assets/images/light.png',
-                  height: 32,
-                  width: 32,
-                )
-              ],
-            ),
-            new GestureDetector(
-              // 点击事件需要用这个widget包裹其他widget
-              onTap: () {
-                Fluttertoast.showToast(
-                    msg: "do not touch me",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIos: 3);
-              },
-              onLongPress: () {
-                Fluttertoast.showToast(
-                    msg: "hahaha",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIos: 3);
-              },
-              child: Text(
-                '$_counter',
-                textAlign: TextAlign.left,
-                textDirection: TextDirection.ltr,
-                style: new TextStyle(
-                    fontSize: 100,
-                    color: Color(0xfdff00ff),
-                    background: new Paint()
-                      ..strokeWidth = 10
-                      ..color = Colors.lightGreen
-                      ..isAntiAlias = false
-                      ..strokeCap = StrokeCap.round,
-                    fontWeight: FontWeight.normal),
-              ),
-            )
-          ],
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(widget.title),
         ),
+        body: Center(
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: Column(
+            // Column is also layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Invoke "debug painting" (press "p" in the console, choose the
+            // "Toggle Debug Paint" action from the Flutter Inspector in Android
+            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+            // to see the wireframe for each widget.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+//          mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Row(
+                children: <Widget>[
+                  Text(
+                    'You have pushed the button this many times:',
+                    textDirection: TextDirection.ltr,
+                  ),
+                  new Image.asset(
+                    'assets/images/light.png',
+                    height: 32,
+                    width: 32,
+                  )
+                ],
+              ),
+              new GestureDetector(
+                // 点击事件需要用这个widget包裹其他widget
+                onTap: () {
+                  Fluttertoast.showToast(
+                      msg: "do not touch me",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIos: 3);
+                },
+                onLongPress: () {
+                  Fluttertoast.showToast(
+                      msg: "hahaha",
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIos: 3);
+                },
+                child: Text(
+                  '$_counter',
+                  textAlign: TextAlign.left,
+                  textDirection: TextDirection.ltr,
+                  style: new TextStyle(
+                      fontSize: 100,
+                      color: Color(0xfdff00ff),
+                      background: new Paint()
+                        ..strokeWidth = 10
+                        ..color = Colors.lightGreen
+                        ..isAntiAlias = false
+                        ..strokeCap = StrokeCap.round,
+                      fontWeight: FontWeight.normal),
+                ),
+              )
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: Icon(Icons.add),
+        ), // This trailing comma makes auto-formatting nicer for build methods.
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    onWillPop: _onWillPop,);
+  }
+
+  Future<bool> _onWillPop() async {
+    print("_onWillPop,$context");
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    ) ??
+        false;
   }
 }

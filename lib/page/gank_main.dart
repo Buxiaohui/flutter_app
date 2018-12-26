@@ -8,7 +8,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+//    return WillPopScope(
+//      child: new MaterialApp(
+    return new MaterialApp(
       title: 'Flutter Demo',
       color: const Color(0xff00ff00),
       theme: ThemeData(
@@ -25,7 +27,31 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.lightGreen,
       ),
       home: Index(),
-
+//      ),
+//      onWillPop: () {
+//        return _onWillPop(context);
+//      },
     );
+  }
+
+  Future<bool> _onWillPop(BuildContext context) async {
+    return showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+                title: new Text('Are you sure?'),
+                content: new Text('Do you want to exit an App'),
+                actions: <Widget>[
+                  new FlatButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: new Text('No'),
+                  ),
+                  new FlatButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: new Text('Yes'),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
   }
 }

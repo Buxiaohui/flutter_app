@@ -18,7 +18,7 @@ import 'package:flutter_app/page/today_gank/free_recom_child_page.dart';
 import 'package:flutter_app/page/today_gank/ios_child_page.dart';
 import 'package:flutter_app/page/today_gank/relax_video_child_page.dart';
 import 'package:flutter_app/page/today_gank/stretch_resource_child_page.dart';
-
+void main() => runApp(TodayGankPage());
 class TodayGankPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new TodayGankPageState();
@@ -101,24 +101,48 @@ class TodayGankPageState extends State<TodayGankPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new Scaffold(
-        appBar: new AppBar(
-          title: new Text("今日干货"),
-          centerTitle: false,
-        ),
-        body: new PageView.builder(
-          pageSnapping: true,
-          onPageChanged: _pageChange,
-          controller: _pageController,
-          itemBuilder: (BuildContext context, int index) {
-            print("build,getText,$index");
-            return getItem(index);
-          },
-          itemCount: getItemCount(),
-        ),
-      ),
-    );
+//    return WillPopScope(
+//        child: new MaterialApp(
+        return new MaterialApp(
+          home: new Scaffold(
+            appBar: new AppBar(
+              title: new Text("今日干货"),
+              centerTitle: false,
+            ),
+            body: new PageView.builder(
+              pageSnapping: true,
+              onPageChanged: _pageChange,
+              controller: _pageController,
+              itemBuilder: (BuildContext context, int index) {
+                print("build,getText,$index");
+                return getItem(index);
+              },
+              itemCount: getItemCount(),
+            ),
+          ),
+        );
+//        onWillPop: _onWillPop);
+  }
+
+  Future<bool> _onWillPop() async {
+    return showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+                title: new Text('Are you sure?'),
+                content: new Text('Do you want to exit an App'),
+                actions: <Widget>[
+                  new FlatButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: new Text('No'),
+                  ),
+                  new FlatButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: new Text('Yes'),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
   }
 
   StatefulWidget getItem(int index) {
