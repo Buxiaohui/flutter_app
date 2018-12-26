@@ -108,6 +108,7 @@ class TodayGankPageState extends State<TodayGankPage> {
           centerTitle: false,
         ),
         body: new PageView.builder(
+          pageSnapping: true,
           onPageChanged: _pageChange,
           controller: _pageController,
           itemBuilder: (BuildContext context, int index) {
@@ -131,7 +132,7 @@ class TodayGankPageState extends State<TodayGankPage> {
     if (_todayGankModel != null && _todayGankModel.category != null) {
       return _todayGankModel.category[index];
     }
-    return "pps, error";
+    return "opps, error";
   }
 
   int getItemCount() {

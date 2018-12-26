@@ -45,6 +45,7 @@ flutter:
   assets:
      - assets/images/light.png
      - assets/images/ic_detail.png
+     - assets/images/img_hand_2_left.png
      - assets/videos/QQ20181220-120707-HD.mp4
      - assets/videos/test_video_01.mp4
   # To add assets to your application, add an assets section, like this:
