@@ -10,7 +10,6 @@ class WebViewApp extends StatefulWidget {
 }
 
 class _VideoAppState extends State<WebViewApp> {
-
   @override
   void initState() {
     super.initState();
@@ -18,16 +17,18 @@ class _VideoAppState extends State<WebViewApp> {
 
   @override
   Widget build(BuildContext context) {
-   return new MaterialApp(
-      routes: {
-        "/": (_) =>
-        new WebviewScaffold(
-          url: "https://v.douyin.com/8AQBdu/",
-          appBar: new AppBar(
-            title: new Text("Widget webview"),
-          ),
+    //return new WillPopScope(child: null, onWillPop: null);
+    return new WillPopScope(
+        child: new MaterialApp(
+          routes: {
+            "/": (_) => new WebviewScaffold(
+                  url: "https://v.douyin.com/8AQBdu/",
+                  appBar: new AppBar(
+                    title: new Text("Widget webview"),
+                  ),
+                ),
+          },
         ),
-      },
-    );
+        onWillPop: null);
   }
 }

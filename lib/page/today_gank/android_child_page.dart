@@ -18,23 +18,32 @@ class AndroidPage extends StatefulWidget {
 class _MyListState extends State<AndroidPage>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
-  Animation<int> _animation;
+  Animation<double> _animation;
+  double _xHandImgOffset;
 
   @override
   void initState() {
     super.initState();
     _animationController = new AnimationController(
-        duration: Duration(milliseconds: 10), vsync: this);
-    _animation = new Tween(begin: 0, end: 100).animate(_animationController)
-      ..addListener(() {
-        setState(() {
-          print("_animation.value:$_animation.value");
-        });
-      })
-      ..addStatusListener((status) {
-        print("status:$status");
-      });
-    _animationController.forward();
+        duration: const Duration(seconds: 2), vsync: this);
+    _animation =
+        new Tween<double>(begin: 5.0, end: -5.0).animate(_animationController)
+          ..addListener(() {
+            print("_animation.value:$_animation.value");
+            setState(() {
+              _xHandImgOffset = _animation.value;
+            });
+          })
+          ..addStatusListener((status) {
+            print("status:$status");
+          });
+    _animationController.repeat();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -165,8 +174,9 @@ class _MyListState extends State<AndroidPage>
                     children: <Widget>[
                       Text("gayhub:"),
                       Container(
-                        constraints: BoxConstraints(
-                            maxWidth: getSuitableWidth()), // SizeUtils.getDevicesWidthPx()
+                        constraints:
+                            BoxConstraints(maxWidth: getSuitableWidth()),
+                        // SizeUtils.getDevicesWidthPx()
                         child: Text(
                           getUrl(index),
                           overflow: TextOverflow.ellipsis,
@@ -180,8 +190,13 @@ class _MyListState extends State<AndroidPage>
                         ),
                       ),
                       Padding(
-                        child: Image.asset('assets/images/img_hand_2_left.png',
-                            height: 16, width: 16),
+                        child: Transform.translate(
+                          offset: Offset(_xHandImgOffset, 0.0),
+                          child: Image.asset(
+                              'assets/images/img_hand_2_left.png',
+                              height: 16,
+                              width: 16),
+                        ),
                         padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
                       ),
                     ],
@@ -205,8 +220,8 @@ class _MyListState extends State<AndroidPage>
   double getSuitableWidth() {
     double width = MediaQuery.of(context).size.width;
     print("getSuitableWidth,$width");
-    width =  width / 7.0 * 5.0;
+    width = width / 7.0 * 5.0;
     print("getSuitableWidth,$width");
-    return width ;
+    return width;
   }
 }
