@@ -1,127 +1,116 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/bean/AndroidModel.dart';
-import 'package:flutter_app/bean/AppModel.dart';
-import 'package:flutter_app/bean/BenifitModel.dart';
-import 'package:flutter_app/bean/FreeRecomModel.dart';
-import 'package:flutter_app/bean/IOSModel.dart';
-import 'package:flutter_app/bean/RelaxVideoModel.dart';
-import 'package:flutter_app/bean/StretchResModel.dart';
+import 'package:flutter_app/bean/ModeHelper.dart';
+import 'package:flutter_app/bean/TodayGankBaseChildModel.dart';
 import 'package:flutter_app/bean/TodayGankModel.dart';
 import 'package:flutter_app/net/NetConstants.dart';
 import 'package:flutter_app/net/NetController.dart';
-import 'package:flutter_app/page/today_gank/android_child_page.dart';
-import 'package:flutter_app/page/today_gank/app_child_page.dart';
-import 'package:flutter_app/page/today_gank/benifit_child_page.dart';
-import 'package:flutter_app/page/today_gank/free_recom_child_page.dart';
-import 'package:flutter_app/page/today_gank/ios_child_page.dart';
-import 'package:flutter_app/page/today_gank/relax_video_child_page.dart';
-import 'package:flutter_app/page/today_gank/stretch_resource_child_page.dart';
+import 'package:flutter_app/page/today_gank/today_base_child_page.dart';
+
 void main() => runApp(TodayGankPage());
+
 class TodayGankPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new TodayGankPageState();
 }
 
-class TodayGankPageState extends State<TodayGankPage> {
-  List<StatefulWidget> _childPageList; // 存放对应的页面
-  List<AndroidModel> androidModels;
-  List<AppModel> appModels;
-  List<IOSModel> iosModels;
-  List<RelaxVideoModel> relaxVideoModels;
-  List<StretchResModel> stretchResModels;
-  List<FreeRecomModel> freeRecomModels;
-  List<BenifitModel> benifitModels;
-
-  AndroidPage androidPage;
-  AppPage appPage;
-  IOSPage iosPage;
-  RelaxVideoPage relaxVideoPage;
-  StretchResPage stretchResPage;
-  FreeRecomPage freeRecomPage;
-  BenifitPage benifitPage;
-
+class TodayGankPageState extends State<TodayGankPage>
+    with SingleTickerProviderStateMixin {
   int _currentPageIndex = 0;
   var _pageController = new PageController(initialPage: 0);
   TodayGankModel _todayGankModel;
+  List<Text> _tabTitleWidgetList;
+  HashMap<String, dynamic> _pageMap;
+  final List<Tab> tabs = [];
 
   @override
   void initState() {
     super.initState();
-    androidPage = AndroidPage(items: androidModels);
-    appPage = AppPage(items: appModels);
-    iosPage = IOSPage(items: iosModels);
-    relaxVideoPage = RelaxVideoPage(items: relaxVideoModels);
-    stretchResPage = StretchResPage(items: stretchResModels);
-    freeRecomPage = FreeRecomPage(items: freeRecomModels);
-    benifitPage = BenifitPage(items: benifitModels);
-    // 网络请求
+    print("***********initState***********");
+    _pageMap = new HashMap<String, dynamic>();
+    _tabTitleWidgetList = new List();
+    for (int i = 0; i < ModeHelper.TITLES.length; i++) {
+      _tabTitleWidgetList.add(
+          new Text(ModeHelper.TITLES[i], style: new TextStyle(fontSize: 20.0)));
+      tabs.add(new Tab(child: _tabTitleWidgetList[i]));
+    }
     NetController.request(NetConstants.TODAY_GANK_URL,
         (request, response, bodyData) {
       try {
+        print("***********initState request data***********");
         _todayGankModel = TodayGankModel.fromJson(json.decode(bodyData));
       } catch (exception) {
         print("initState,error,$exception");
       }
-      // 存放页面
-      _childPageList = <StatefulWidget>[
-        androidPage,
-        appPage,
-        iosPage,
-        relaxVideoPage,
-        stretchResPage,
-        freeRecomPage,
-        benifitPage
-      ];
-      print("initState,_todayGankModel,$_todayGankModel");
-      // flutter 通过这种方式更新UI
-      setState(() {
-        print("initState,setState,_todayGankModel,$_todayGankModel");
-        if (_todayGankModel != null && _todayGankModel.results != null) {
-          androidModels = _todayGankModel.results.Android;
-          appModels = _todayGankModel.results.App;
-          iosModels = _todayGankModel.results.iOS;
-          relaxVideoModels = _todayGankModel.results.mRelaxVideoModels;
-          stretchResModels = _todayGankModel.results.mStretchResModels;
-          freeRecomModels = _todayGankModel.results.mFreeRecomModels;
-          benifitModels = _todayGankModel.results.mBenifitModels;
 
-          androidPage.items = androidModels;
-          appPage.items = appModels;
-          iosPage.items = iosModels;
-          relaxVideoPage.items = relaxVideoModels;
-          stretchResPage.items = stretchResModels;
-          freeRecomPage.items = freeRecomModels;
-          benifitPage.items = benifitModels;
+      print("initState,setState,_todayGankModel,$_todayGankModel");
+      setState(() {
+        if (_todayGankModel != null && _todayGankModel.category.length > 0) {
+          for (int i = 0; i < _todayGankModel.category.length; i++) {
+            TodayGankBaseChildPage todayGankBaseChildPage =
+                new TodayGankBaseChildPage(title: _todayGankModel.category[i]);
+            todayGankBaseChildPage.items =
+                getDatas(_todayGankModel.category[i]);
+            _pageMap[_todayGankModel.category[i]] = todayGankBaseChildPage;
+          }
         }
       });
     });
+  }
+
+  List<BaseItemModel> getDatas(String category) {
+    if (_todayGankModel == null ||
+        _todayGankModel.results == null ||
+        category == null ||
+        category.isEmpty) {
+      return null;
+    }
+    switch (category) {
+      case ModeHelper.APP:
+        return _todayGankModel.results.App;
+      case ModeHelper.FRONT:
+        return _todayGankModel.results.front;
+      case ModeHelper.ANDROID:
+        return _todayGankModel.results.Android;
+      case ModeHelper.STRETCH_RES:
+        return _todayGankModel.results.mStretchResModels;
+      case ModeHelper.RECOM:
+        return _todayGankModel.results.mFreeRecomModels;
+      case ModeHelper.IOS:
+        return _todayGankModel.results.iOS;
+      case ModeHelper.BENIFIT:
+        return _todayGankModel.results.mBenifitModels;
+      case ModeHelper.RELAX_VIDEO:
+        return _todayGankModel.results.mRelaxVideoModels;
+      default:
+        return null;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
 //    return WillPopScope(
 //        child: new MaterialApp(
-        return new MaterialApp(
-          home: new Scaffold(
-            appBar: new AppBar(
-              title: new Text("今日干货"),
-              centerTitle: false,
-            ),
-            body: new PageView.builder(
-              pageSnapping: true,
-              onPageChanged: _pageChange,
-              controller: _pageController,
-              itemBuilder: (BuildContext context, int index) {
-                print("build,getText,$index");
-                return getItem(index);
-              },
-              itemCount: getItemCount(),
-            ),
+    return new DefaultTabController(
+      length: tabs.length,
+      child: new Scaffold(
+        appBar: new AppBar(
+          title: new Text("今日干货"),
+          centerTitle: false,
+          bottom: new TabBar(
+            isScrollable: true,
+            tabs: tabs,
           ),
-        );
-//        onWillPop: _onWillPop);
+        ),
+        body: new TabBarView(
+          children: _tabTitleWidgetList.map((Text titleTextWidget) {
+            return new Center(child: _pageMap[titleTextWidget.data]);
+          }).toList(),
+        ),
+      ),
+    );
   }
 
   Future<bool> _onWillPop() async {
@@ -143,13 +132,6 @@ class TodayGankPageState extends State<TodayGankPage> {
               ),
         ) ??
         false;
-  }
-
-  StatefulWidget getItem(int index) {
-    if (_childPageList != null && _childPageList.length > index && index >= 0) {
-      return _childPageList[index];
-    }
-    return null;
   }
 
   String getItemName(int index) {

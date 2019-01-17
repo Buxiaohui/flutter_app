@@ -14,7 +14,7 @@ RelaxVideoModels _$RelaxVideoModelsFromJson(Map<String, dynamic> json) {
       (json['results'] as List)
       ?.map((e) => e == null
       ? null
-      : RelaxVideoModel.fromJson(e as Map<String, dynamic>))
+      : BaseItemModel.fromJson(e as Map<String, dynamic>))
       ?.toList());
 }
 

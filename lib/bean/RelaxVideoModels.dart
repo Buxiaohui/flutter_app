@@ -1,13 +1,12 @@
-import 'package:flutter_app/bean/RelaxVideoModel.dart';
+import 'package:flutter_app/bean/TodayGankBaseChildModel.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'RelaxVideoModels.g.dart';
 
 @JsonSerializable()
 class RelaxVideoModels extends Object {
   int count;
-
   bool error;
-  List<RelaxVideoModel> results;
+  List<BaseItemModel> results;
 
   RelaxVideoModels(this.count, this.error, this.results);
 

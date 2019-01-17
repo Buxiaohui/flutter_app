@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/page/HomePage.dart';
+import 'package:flutter_app/page/Benifit.dart';
 import 'package:flutter_app/page/relax_video/VideoPage.dart';
 import 'package:flutter_app/page/today_gank/TodayGankPage.dart';
 import 'package:flutter_app/page/RelaxReadPage.dart';
@@ -68,7 +68,7 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
     _pageList = <StatefulWidget>[
       new TodayGankPage(),
       new RelaxReadPage(),
-      new HomePage(),
+      new Benifit(),
       new VideoPage(),
       new MinePage(),
     ];
@@ -84,19 +84,18 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
           .toList(), // 添加 icon 按钮
       currentIndex: _currentIndex, // 当前点击的索引值
       // type: BottomNavigationBarType.shifting, // 设置底部导航工具栏的类型：fixed 固定
-      type: BottomNavigationBarType.fixed,    // 设置底部导航工具栏的类型：fixed 固定
+      type: BottomNavigationBarType.fixed, // 设置底部导航工具栏的类型：fixed 固定
       onTap: (int index) {
         // 添加点击事件
         setState(() {
           // 点击之后，需要触发的逻辑事件
           _navigationViews[_currentIndex].controller.reverse();
           _currentIndex = index;
-           _navigationViews[_currentIndex].controller.forward();
+          _navigationViews[_currentIndex].controller.forward();
           _currentPage = _pageList[_currentIndex];
         });
       },
     );
-
     return new MaterialApp(
       home: new Scaffold(
         body: new Center(child: _currentPage // 动态的展示我们当前的页面
@@ -107,5 +106,39 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
         primarySwatch: Colors.blue, // 设置主题颜色
       ),
     );
+//    return new WillPopScope(
+//        child: new MaterialApp(
+//          home: new Scaffold(
+//            body: new Center(child: _currentPage // 动态的展示我们当前的页面
+//                ),
+//            bottomNavigationBar: bottomNavigationBar, // 底部工具栏
+//          ),
+//          theme: new ThemeData(
+//            primarySwatch: Colors.blue, // 设置主题颜色
+//          ),
+//        ),
+//        onWillPop: _onWillPop);
+  }
+
+  Future<bool> _onWillPop() async {
+    print("_onWillPop hahaha");
+    return showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+                title: new Text('Are you sure?'),
+                content: new Text('Do you want to exit an App'),
+                actions: <Widget>[
+                  new FlatButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: new Text('No'),
+                  ),
+                  new FlatButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: new Text('Yes'),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
   }
 }
