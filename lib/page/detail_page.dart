@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -8,6 +7,11 @@ class DetailPage extends StatefulWidget {
   final String title;
 
   DetailPage({Key key, this.title}) : super(key: key);
+
+  factory DetailPage.forDesignTime() {
+    // TODO: add arguments
+    return new DetailPage();
+  }
 
   @override
   _DetailPageState createState() {
@@ -69,7 +73,7 @@ class _DetailPageState extends State<DetailPage> {
 //              ],
 //            ),
 //            // 拓展listview TODO
-            new MyListView(items:getData())
+            new MyListView(items: getData())
           ],
         ));
     return widget;
@@ -88,13 +92,12 @@ class MyListView extends StatefulWidget {
 
 //得到一个ListView
 class MyListState extends State<MyListView> {
-
   @override
   Widget build(BuildContext context) {
     print(widget.items);
-    return new Flexible(child:
-       new ListView.builder(itemCount: widget.items.length, itemBuilder: getItemUserDefine)
-    );
+    return new Flexible(
+        child: new ListView.builder(
+            itemCount: widget.items.length, itemBuilder: getItemUserDefine));
   }
 
   //ListView的Item
@@ -167,7 +170,6 @@ class ItemData {
   String toString() {
     return 'ItemData{_url: $_url, _desc: $_desc, _index: $_index}';
   }
-
 }
 
 void main() {

@@ -8,6 +8,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 
 class FlutterFirst extends StatefulWidget {
+  FlutterFirst();
+
+  factory FlutterFirst.forDesignTime() {
+    // TODO: add arguments
+    return new FlutterFirst();
+  }
+
   @override
   State<StatefulWidget> createState() => new _MyFlutterFlutterFirstState();
 }
@@ -88,10 +95,10 @@ class _MyFlutterFlutterFirstState extends State<FlutterFirst>
           if (hours <= 9) {
             hoursStr = "0" + hours.toString();
           }
-          if (minutes < 9) {
+          if (minutes <= 9) {
             minutesStr = "0" + minutes.toString();
           }
-          if (seconds < 9) {
+          if (seconds <= 9) {
             secondsStr = "0" + seconds.toString();
           }
           _audio_duration_str = hoursStr + ":" + minutesStr + ":" + secondsStr;
@@ -179,6 +186,7 @@ class _MyFlutterFlutterFirstState extends State<FlutterFirst>
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: "flutter---bxh",
         home: new Scaffold(
           appBar: AppBar(

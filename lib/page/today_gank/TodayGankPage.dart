@@ -7,11 +7,20 @@ import 'package:flutter_app/bean/TodayGankBaseChildModel.dart';
 import 'package:flutter_app/bean/TodayGankModel.dart';
 import 'package:flutter_app/net/NetConstants.dart';
 import 'package:flutter_app/net/NetController.dart';
+import 'package:flutter_app/page/base_page_mixin.dart';
+import 'package:flutter_app/page/today_gank/benifit_child_page.dart';
 import 'package:flutter_app/page/today_gank/today_base_child_page.dart';
 
 void main() => runApp(TodayGankPage());
 
 class TodayGankPage extends StatefulWidget {
+  TodayGankPage();
+
+  factory TodayGankPage.forDesignTime() {
+    // TODO: add arguments
+    return new TodayGankPage();
+  }
+
   @override
   State<StatefulWidget> createState() => new TodayGankPageState();
 }
@@ -19,7 +28,7 @@ class TodayGankPage extends StatefulWidget {
 class TodayGankPageState extends State<TodayGankPage>
     with SingleTickerProviderStateMixin {
   int _currentPageIndex = 0;
-  var _pageController = new PageController(initialPage: 0);
+  // var _pageController = new PageController(initialPage: 0);
   TodayGankModel _todayGankModel;
   List<Text> _tabTitleWidgetList;
   HashMap<String, dynamic> _pageMap;
@@ -49,15 +58,59 @@ class TodayGankPageState extends State<TodayGankPage>
       setState(() {
         if (_todayGankModel != null && _todayGankModel.category.length > 0) {
           for (int i = 0; i < _todayGankModel.category.length; i++) {
-            TodayGankBaseChildPage todayGankBaseChildPage =
-                new TodayGankBaseChildPage(title: _todayGankModel.category[i]);
-            todayGankBaseChildPage.items =
-                getDatas(_todayGankModel.category[i]);
-            _pageMap[_todayGankModel.category[i]] = todayGankBaseChildPage;
+            BasePageMixin childPage = getTabPage(_todayGankModel.category[i]);
+            _pageMap[_todayGankModel.category[i]] = childPage;
           }
         }
       });
     });
+  }
+
+  BasePageMixin getTabPage(String category) {
+    switch (category) {
+      case ModeHelper.APP:
+        BasePageMixin childPage = new TodayGankBaseChildPage();
+        childPage.items = getDatas(category);
+        childPage.title = category;
+        return childPage;
+      case ModeHelper.FRONT:
+        BasePageMixin childPage = new TodayGankBaseChildPage();
+        childPage.items = getDatas(category);
+        childPage.title = category;
+        return childPage;
+      case ModeHelper.ANDROID:
+        BasePageMixin childPage = new TodayGankBaseChildPage();
+        childPage.items = getDatas(category);
+        childPage.title = category;
+        return childPage;
+      case ModeHelper.STRETCH_RES:
+        BasePageMixin childPage = new TodayGankBaseChildPage();
+        childPage.items = getDatas(category);
+        childPage.title = category;
+        return childPage;
+      case ModeHelper.RECOM:
+        BasePageMixin childPage = new TodayGankBaseChildPage();
+        childPage.items = getDatas(category);
+        childPage.title = category;
+        return childPage;
+      case ModeHelper.IOS:
+        BasePageMixin childPage = new TodayGankBaseChildPage();
+        childPage.items = getDatas(category);
+        childPage.title = category;
+        return childPage;
+      case ModeHelper.BENIFIT:
+        BasePageMixin childPage = new BenifitChildPage();
+        childPage.items = getDatas(category);
+        childPage.title = category;
+        return childPage;
+      case ModeHelper.RELAX_VIDEO:
+        BasePageMixin childPage = new TodayGankBaseChildPage();
+        childPage.items = getDatas(category);
+        childPage.title = category;
+        return childPage;
+      default:
+        return null;
+    }
   }
 
   List<BaseItemModel> getDatas(String category) {
@@ -149,20 +202,5 @@ class TodayGankPageState extends State<TodayGankPage>
       return 0;
     }
     return _todayGankModel.category.length;
-  }
-
-  // bottomnaviagtionbar 和 pageview 的联动
-  void onTap(int index) {
-    // 过pageview的pagecontroller的animateToPage方法可以跳转
-    _pageController.animateToPage(index,
-        duration: const Duration(milliseconds: 300), curve: Curves.ease);
-  }
-
-  void _pageChange(int index) {
-    setState(() {
-      if (_currentPageIndex != index) {
-        _currentPageIndex = index;
-      }
-    });
   }
 }

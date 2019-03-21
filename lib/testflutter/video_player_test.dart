@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 
-/***
- ** 华为手机失败，小米安装不上，不支持模拟器，最后在乐视手机上ok了
- **/
+///华为手机失败，小米安装不上，不支持模拟器，最后在乐视手机上ok了
 
 void main() => runApp(VideoApp());
 

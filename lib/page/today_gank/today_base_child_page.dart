@@ -1,20 +1,28 @@
 //view:listview
-import 'package:dio/dio.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/bean/ModeHelper.dart';
 import 'package:flutter_app/bean/TodayGankBaseChildModel.dart';
+import 'package:flutter_app/page/base_page_mixin.dart';
 import 'package:flutter_app/page/webview_page.dart';
 import 'package:flutter_app/utils/DownloadHelper.dart';
-import 'package:flutter_app/utils/Md5Helper.dart';
-import 'package:flutter_app/utils/PathHelper.dart';
-import 'package:simple_permissions/simple_permissions.dart';
 
-class TodayGankBaseChildPage extends StatefulWidget {
-  List<BaseItemModel> items;
-  String title;
+class TodayGankBaseChildPage extends StatefulWidget with BasePageMixin {
+  TodayGankBaseChildPage({Key key}) : super(key: key);
 
-  TodayGankBaseChildPage({Key key, this.title}) : super(key: key);
+  @override
+  void set title(String _title) {
+    // TODO: implement title
+    super.title = _title;
+  }
+
+  @override
+  void set items(List<BaseItemModel> _items) {
+    // TODO: implement items
+    super.items = _items;
+  }
 
   @override
   State<StatefulWidget> createState() => new _MyListState();
@@ -26,6 +34,8 @@ class _MyListState extends State<TodayGankBaseChildPage>
   AnimationController _animationController;
   Animation<double> _animation;
   double _xHandImgOffset = 0.0;
+  String tipsStr;
+  var tipBannerTextArr = ["讲真，百度导航天下第一", "据说：百度导航将称霸世界", "传言：百度导航一统宇宙"];
 
   @override
   void initState() {
@@ -45,6 +55,7 @@ class _MyListState extends State<TodayGankBaseChildPage>
           });
     // _animationController.repeat();
     _animationController.forward();
+    tipsStr = tipBannerTextArr[Random().nextInt(tipBannerTextArr.length)];
   }
 
   @override
@@ -57,7 +68,7 @@ class _MyListState extends State<TodayGankBaseChildPage>
   Widget build(BuildContext context) {
     print(widget.items);
     return new Column(children: <Widget>[
-      Text("-----我不管我要做一楼----"),
+      Text(tipsStr),
       new Flexible(
           child: new ListView.builder(
               itemCount: getItemCount(),
@@ -159,189 +170,128 @@ class _MyListState extends State<TodayGankBaseChildPage>
         index < 0) {
       return "";
     }
-    return "发布日期:" + widget.items[index].publishedAt;
+    return "发布日期:" + widget.items[index].publishedAt.substring(0, 10);
   }
 
   //ListView的Item
   Widget getItemUserDefine(BuildContext context, int index) {
-    return new Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      textDirection: TextDirection.ltr,
-      children: <Widget>[
-        new Column(
-          children: <Widget>[
-            new Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  getDesc(index),
-                  softWrap: true,
-                )),
-            new Row(
-              children: <Widget>[
-                new Expanded(
-                    child: new Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 5, 16, 0),
-                        child: new Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: Text(getWho(index),
-                                softWrap: true, textAlign: TextAlign.left))))
-              ],
-            ),
-            new Row(
-              children: <Widget>[
-                new Expanded(
-                    child: new Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 5, 16, 2),
-                        child: new Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: Text(getPublishedAt(index),
-                                softWrap: true, textAlign: TextAlign.left))))
-              ],
-            )
-          ],
-        ),
-        new Column(
-          children: new List.generate(getImageCount(index), (int imgIndex) {
-            String url = getImageUrl(index, imgIndex);
-            return new GestureDetector(
-                child: Image.network(url),
-                onLongPress: () {
-                  if (ModeHelper.BENIFIT == widget.title) {
-                    onImageLongPressed(url);
-                  } else {
-                    String title = widget.title;
-                    print("title is $title");
-                  }
-                });
-          }),
-        ),
-        Container(
-            constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context)
-                    .size
-                    .width), // SizeUtils.getDevicesWidthPx()
-            child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 5, 16, 10),
-                child: new GestureDetector(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Text("link:"),
-                      Container(
-                        constraints:
-                            BoxConstraints(maxWidth: getSuitableWidth()),
-                        // SizeUtils.getDevicesWidthPx()
-                        child: Text(
-                          getUrl(index),
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: true,
-                          textAlign: TextAlign.left,
-                          maxLines: 3,
-                          style: new TextStyle(
-                              color: Colors.red,
-                              decoration: TextDecoration.underline),
-                        ),
-                      ),
-                      Padding(
-                        child: Transform.translate(
-                          offset: Offset(_xHandImgOffset, 0.0),
-                          child: Image.asset(
-                              'assets/images/img_hand_2_left.png',
-                              height: 16,
-                              width: 16),
-                        ),
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) =>
-                                new WebViewPage(getUrl(index))));
-                  },
-                ))),
-        new Divider(
-          height: 1,
-          color: Color(0x66000000),
-        ),
-      ],
-    );
-  }
-
-  Future<bool> onImageLongPressed(String url) async {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-                title: new Text('Download'),
-                content: new Text('下载图片到本地'),
-                actions: <Widget>[
-                  new FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: new Text('No'),
-                  ),
-                  new FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      downloadImage(url);
-                    },
-                    child: new Text('Yes'),
-                  ),
+    // 根据文档描述，没有指定card的shape屎，使用主题默认的shape，是一个圆角的shape，圆角4dp
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.fromLTRB(8, 4, 8, 4),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        textDirection: TextDirection.ltr,
+        children: <Widget>[
+          new Column(
+            children: <Widget>[
+              new Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    getDesc(index),
+                    softWrap: true,
+                  )),
+              new Row(
+                children: <Widget>[
+                  new Expanded(
+                      child: new Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 5, 16, 0),
+                          child: new Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: Text(getWho(index),
+                                  softWrap: true, textAlign: TextAlign.left))))
                 ],
               ),
-        ) ??
-        false;
-  }
+              new Row(
+                children: <Widget>[
+                  new Expanded(
+                      child: new Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 5, 16, 2),
+                          child: new Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: Text(getPublishedAt(index),
+                                  softWrap: true, textAlign: TextAlign.left))))
+                ],
+              )
+            ],
+          ),
+          new Column(
+            children: new List.generate(getImageCount(index), (int imgIndex) {
+              String url = getImageUrl(index, imgIndex);
+              return new GestureDetector(
+                  child: Image.network(url),
+                  onLongPress: () {
+                    if (ModeHelper.BENIFIT == widget.title) {
+                      DownloadHelper.onImageLongPressed(context, url);
+                    } else {
+                      String title = widget.title;
+                      print("title is $title");
+                    }
+                  });
+            }),
+          ),
+          Container(
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context)
+                      .size
+                      .width), // SizeUtils.getDevicesWidthPx()
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 5, 16, 10),
+                  child: new GestureDetector(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Text("link:"),
+                        Container(
+                          constraints:
+                              BoxConstraints(maxWidth: getSuitableWidth()),
+                          // SizeUtils.getDevicesWidthPx()
+                          child: Text(
+                            getUrl(index),
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            textAlign: TextAlign.left,
+                            maxLines: 3,
+                            style: new TextStyle(
+                                color: Colors.red,
+                                decoration: TextDecoration.underline),
+                          ),
+                        ),
+                        Padding(
+                          child: Transform.translate(
+                            offset: Offset(_xHandImgOffset, 0.0),
+                            child: Image.asset(
+                                'assets/images/img_hand_2_left.png',
+                                height: 16,
+                                width: 16),
+                          ),
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(new MaterialPageRoute(
+                          builder: (BuildContext context) {
+                        return new WebViewPage(getUrl(index));
+                      }));
 
-  requestPermission(Permission permission) async {
-    final res = await SimplePermissions.requestPermission(permission);
-    print("permission request result is " + res.toString());
-  }
-
-  checkPermission(Permission permission) async {
-    bool res = await SimplePermissions.checkPermission(permission);
-    print("permission is " + res.toString());
-  }
-
-  getPermissionStatus(Permission permission) async {
-    final res = await SimplePermissions.getPermissionStatus(permission);
-    print("permission status is " + res.toString());
-  }
-
-  void downloadImage(String url) async {
-    bool resCheck = await SimplePermissions.checkPermission(
-        Permission.WriteExternalStorage);
-    if (resCheck) {
-      realDownload(url);
-    } else {
-      PermissionStatus permissionStatus =
-          await SimplePermissions.requestPermission(
-              Permission.WriteExternalStorage);
-      if (PermissionStatus.authorized == permissionStatus) {
-        realDownload(url);
-      }
-    }
-  }
-
-  void realDownload(String url) async {
-    String path = await PathHelper.getExternalStorageDir();
-    List<String> strs = url.split(".");
-    path =
-        path + "/" + Md5Helper.generateMd5(url) + "." + strs[strs.length - 1];
-    DownloadHelper.download(url, path,
-        (String url, String path, Response response) {
-      print("downloadImage $url ...  $path");
-      if (response != null) {
-        print("downloadImage $response.data");
-      }
-    }, onDownloadProgress: (int received, int total) {
-      double d = (received / total) * 100;
-      String dp = d.toString() + "%";
-      print("downloadImage $total ...  $received ... $dp");
-    });
+                      /// 等同于下面的代码
+                      /// ---start---
+//                      Navigator.push(
+//                          context,
+//                          new MaterialPageRoute(
+//                              builder: (context) =>
+//                                  new WebViewPage(getUrl(index))));
+                      /// ---end---
+                    },
+                  ))),
+          new Divider(
+            height: 1,
+            color: Color(0x00000000),
+          ),
+        ],
+      ),
+    );
   }
 
   double getSuitableWidth() {

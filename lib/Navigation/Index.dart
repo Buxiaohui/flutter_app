@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Navigation/NavigationBar.dart';
 import 'package:flutter_app/page/Benifit.dart';
+import 'package:flutter_app/page/MinePage.dart';
+import 'package:flutter_app/page/RelaxReadPage.dart';
 import 'package:flutter_app/page/relax_video/VideoPage.dart';
 import 'package:flutter_app/page/today_gank/TodayGankPage.dart';
-import 'package:flutter_app/page/RelaxReadPage.dart';
-import 'package:flutter_app/page/MinePage.dart';
-import 'package:flutter_app/Navigation/NavigationBar.dart';
 
 // 创建一个 带有状态的 Widget Index
 class Index extends StatefulWidget {
+  Index();
+
+  factory Index.forDesignTime() {
+    // TODO: add arguments
+    return new Index();
+  }
+
   //  固定的写法
   @override
   State<StatefulWidget> createState() => new _IndexState();
@@ -97,6 +104,8 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
       },
     );
     return new MaterialApp(
+      showPerformanceOverlay: false, // 是否显示"关于性能信息的覆盖层"
+      debugShowCheckedModeBanner: false,
       home: new Scaffold(
         body: new Center(child: _currentPage // 动态的展示我们当前的页面
             ),
