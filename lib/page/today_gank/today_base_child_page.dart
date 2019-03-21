@@ -272,7 +272,7 @@ class _MyListState extends State<TodayGankBaseChildPage>
                     onTap: () {
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (BuildContext context) {
-                        return new WebViewPage(getUrl(index));
+                        return new GankWebViewPage(getUrl(index));
                       }));
 
                       /// 等同于下面的代码
