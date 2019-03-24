@@ -1,4 +1,5 @@
 // Define a function.
+
 printInteger(int aNumber) {
   print('The number is $aNumber.'); // Print to console.
 }
@@ -27,16 +28,28 @@ main() {
   var arr = [1, 2, 3];
   arr.forEach(printNum);
 
-
   // ?.运算符
+  // 跟.差不多,但是最左边的操作数可以为空；例子:foo?.bar从表达式foo中选择属性bar，
+  // 除非foo为空(在这种情况下，foo?.bar值为空)
   var str1 = "hello world";
   var str2 = null;
   print(str1.length); // 11
   print(str1?.length); // 11
   print(str2?.length); // null
-  print(str2.length); // 报错
+  try {
+    print(str2.length); // 报错
+
+  } catch (e) {
+    print(e);
+  }
+
+  print(add3(2, 4));
+  testDenghao(9);
 }
 
+onSuccess() {}
+
+onFail() {}
 // 声明返回值
 int add(int a, int b) {
   return a + b;
@@ -50,7 +63,16 @@ add2(int a, int b) {
 // =>是return语句的简写
 add3(a, b) => a + b;
 
+testDenghao(num n) => print(n);
 
 void printNum(int a) {
   print("$a");
+}
+
+test(int value) {
+  int b;
+// 赋值给a
+  int a = value;
+// 如果b为空，则将值分配给b；否则，b保持不变
+  b ??= value;
 }

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/Navigation/NavigationBar.dart';
 import 'package:flutter_app/page/Benifit.dart';
 import 'package:flutter_app/page/MinePage.dart';
-import 'package:flutter_app/page/RelaxReadPage.dart';
+import 'package:flutter_app/page/read/relax_read.dart';
 import 'package:flutter_app/page/relax_video/VideoPage.dart';
-import 'package:flutter_app/page/today_gank/TodayGankPage.dart';
+import 'package:flutter_app/page/today_gank/today_gank_page.dart';
 
 // 创建一个 带有状态的 Widget Index
 class Index extends StatefulWidget {
@@ -39,13 +39,13 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
     // 初始化导航图标
     _navigationViews = <NavigationBar>[
       new NavigationBar(
-          icon: new Icon(Icons.assessment),
+          icon: new Icon(Icons.today),
           title: new Text("今日干货"),
           backgroundColor: Colors.lightGreen,
           vsync: this),
       // vsync 默认属性和参数
       new NavigationBar(
-          icon: new Icon(Icons.add_box),
+          icon: new Icon(Icons.book),
           title: new Text("闲读"),
           backgroundColor: Colors.lightBlue,
           vsync: this),
@@ -55,12 +55,12 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
           title: new Text("主页"),
           vsync: this),
       new NavigationBar(
-          icon: new Icon(Icons.all_inclusive),
+          icon: new Icon(Icons.video_label),
           title: new Text("视频"),
           backgroundColor: Colors.lightBlue,
           vsync: this),
       new NavigationBar(
-          icon: new Icon(Icons.adb),
+          icon: new Icon(Icons.person),
           title: new Text("我的"),
           backgroundColor: Colors.deepPurpleAccent,
           vsync: this),

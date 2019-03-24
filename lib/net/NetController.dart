@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 class NetController {
-  static void request(String url, Function callback,
+  static void request(String url, int requestType, Function callback,
       {Map<String, String> params}) async {
+    print("NetController,request $url");
     if (params != null && params.isNotEmpty) {
       StringBuffer sb = new StringBuffer("?");
       params.forEach((key, value) {
@@ -24,7 +25,7 @@ class NetController {
       responseBody = await response.transform(utf8.decoder).join();
     } catch (exception) {}
     if (callback != null) {
-      callback(request, response,responseBody);
+      callback(request, response, responseBody, requestType);
     }
   }
 }

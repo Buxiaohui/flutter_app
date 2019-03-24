@@ -29,6 +29,8 @@ dependencies:
   percent_indicator: "^1.0.12"
   # 音频播放flutter
   audioplayers: ^0.8.0
+  transparent_image: ^1.0.0
+  flutter_spinkit: "^3.1.0"
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +55,7 @@ flutter:
      - assets/images/light.png
      - assets/images/ic_detail.png
      - assets/images/img_hand_2_left.png
+     - assets/images/image_place_holder.png
      # 歌曲封面
      - assets/images/record_plate_bruno_mars.jpeg
      - assets/images/record_plate.jpg

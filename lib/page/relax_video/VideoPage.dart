@@ -18,41 +18,62 @@ class VideoPageState extends State<VideoPage>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
   Animation<double> _animation;
-  double _xHandImgOffset;
-  RelaxVideoModels _relaxVideoModels;
+  double _xHandImgOffset = 0;
   List<BaseItemModel> _items;
   int _page = 1;
   int _count = 10;
 
-  Future<Null> _refresh() async {
+  Future<void> _request(int _requestType) async {
+    if (_requestType == 0) {
+      _count = 10;
+      _page = 1;
+    } else {
+      _page++;
+    }
     // 网络请求
     String finalInitUrl =
         NetConstants.RELAX_VIDEO_BASE_URL + "count/$_count/page/$_page";
     print("refresh,firatInitUrl,$finalInitUrl");
-    NetController.request(finalInitUrl, (request, response, bodyData) {
+    NetController.request(finalInitUrl, _requestType,
+        (request, response, bodyData, requestType) {
+      if (response.statusCode != null) {
+        // TODO
+        print("getMore,maybe success");
+      } else {
+        print("getMore,fail");
+        // error
+      }
       try {
-        _relaxVideoModels = RelaxVideoModels.fromJson(json.decode(bodyData));
-        _items = _relaxVideoModels.results;
+        RelaxVideoModels _relaxVideoModels =
+            RelaxVideoModels.fromJson(json.decode(bodyData));
+        if (requestType == 0) {
+          _items = _relaxVideoModels.results;
+        } else {
+          _items.addAll(_relaxVideoModels.results);
+        }
       } catch (exception) {
         print("refresh,error,$exception");
       }
-      print("refresh,_relaxVideoModels,$_relaxVideoModels");
       // flutter 通过这种方式更新UI
       setState(() {});
     });
-    return null;
   }
+
+  ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
+    _scrollController =
+        new ScrollController(debugLabel: "debug_hui", initialScrollOffset: 0.0);
     _animationController = new AnimationController(
         duration: const Duration(seconds: 2), vsync: this);
     _animation =
         new Tween<double>(begin: 5.0, end: -5.0).animate(_animationController)
           ..addListener(() {
-            print("_animation.value:$_animation.value");
+            // print("_animation.value:$_animation.value");
             setState(() {
+              print("_animation.value:$_animation.value");
               _xHandImgOffset = _animation.value;
             });
           })
@@ -60,7 +81,15 @@ class VideoPageState extends State<VideoPage>
             print("status:$status");
           });
     //_animationController.repeat();
-    _refresh();
+    _request(0);
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        print('滑动到了最底部');
+        _request(1);
+      }
+    });
   }
 
   @override
@@ -71,24 +100,28 @@ class VideoPageState extends State<VideoPage>
           title: Text("Infinite ListView"),
         ),
         body: RefreshIndicator(
-            child: new ListView.builder(
-                itemCount: getItemCount(),
-                itemBuilder: (context, index) {
-                  return getItemUserDefine(context, index);
-                }),
-            onRefresh: _refresh),
+          child: new ListView.builder(
+              controller: _scrollController,
+              itemCount: _getItemCount(),
+              itemBuilder: (context, index) {
+                return _getItemUserDefine(context, index);
+              }),
+          onRefresh: () {
+            _request(0);
+          },
+        ),
       ),
     );
   }
 
-  int getItemCount() {
+  int _getItemCount() {
     if (_items == null) {
       return 0;
     }
     return _items.length;
   }
 
-  int getImageCount(int index) {
+  int _getImageCount(int index) {
     if (_items == null ||
         _items.length < 1 ||
         _items.length <= index ||
@@ -100,7 +133,7 @@ class VideoPageState extends State<VideoPage>
     return _items[index].images.length;
   }
 
-  String getUrl(int index) {
+  String _getUrl(int index) {
     if (_items == null ||
         _items.length < 1 ||
         _items.length <= index ||
@@ -112,7 +145,7 @@ class VideoPageState extends State<VideoPage>
     return _items[index].url;
   }
 
-  String getDesc(int index) {
+  String _getDesc(int index) {
     if (_items == null ||
         _items.length < 1 ||
         _items.length < index ||
@@ -122,7 +155,7 @@ class VideoPageState extends State<VideoPage>
     return _items[index].desc;
   }
 
-  String getWho(int index) {
+  String _getWho(int index) {
     if (_items == null ||
         _items.length < 1 ||
         _items.length < index ||
@@ -132,18 +165,30 @@ class VideoPageState extends State<VideoPage>
     return "作者:" + _items[index].who;
   }
 
-  String getPublishedAt(int index) {
+  String _getPublishedAt(int index) {
     if (_items == null ||
         _items.length < 1 ||
         _items.length < index ||
         index < 0) {
       return "";
     }
-    return "发布日期:" + _items[index].publishedAt;
+    String publishTime = _items[index].publishedAt;
+    if (publishTime != null && _items[index].publishedAt.length >= 10) {
+      return "发布日期:" + publishTime.substring(0, 10);
+    }
+    return "";
   }
 
   //ListView的Item
-  Widget getItemUserDefine(BuildContext context, int index) {
+  Widget _getItemUserDefine(BuildContext context, int index) {
+    return Card(
+      margin: EdgeInsets.fromLTRB(8, 4, 8, 4),
+      elevation: 4,
+      child: getItemUserDefineInner(context, index),
+    );
+  }
+
+  Widget getItemUserDefineInner(BuildContext context, int index) {
     return new Column(
       mainAxisAlignment: MainAxisAlignment.start,
       textDirection: TextDirection.ltr,
@@ -153,7 +198,7 @@ class VideoPageState extends State<VideoPage>
             new Padding(
                 padding: const EdgeInsets.all(16),
                 child: Text(
-                  getDesc(index),
+                  _getDesc(index),
                   softWrap: true,
                 )),
             new Row(
@@ -163,7 +208,7 @@ class VideoPageState extends State<VideoPage>
                         padding: const EdgeInsets.fromLTRB(16, 5, 16, 0),
                         child: new Directionality(
                             textDirection: TextDirection.rtl,
-                            child: Text(getWho(index),
+                            child: Text(_getWho(index),
                                 softWrap: true, textAlign: TextAlign.left))))
               ],
             ),
@@ -174,14 +219,14 @@ class VideoPageState extends State<VideoPage>
                         padding: const EdgeInsets.fromLTRB(16, 5, 16, 2),
                         child: new Directionality(
                             textDirection: TextDirection.rtl,
-                            child: Text(getPublishedAt(index),
+                            child: Text(_getPublishedAt(index),
                                 softWrap: true, textAlign: TextAlign.left))))
               ],
             )
           ],
         ),
         new Column(
-          children: new List.generate(getImageCount(index), (int imgIndex) {
+          children: new List.generate(_getImageCount(index), (int imgIndex) {
             return Image.network(_items[index].images[imgIndex]);
           }),
         ),
@@ -199,10 +244,10 @@ class VideoPageState extends State<VideoPage>
                       Text("link:"),
                       Container(
                         constraints:
-                            BoxConstraints(maxWidth: getSuitableWidth()),
+                            BoxConstraints(maxWidth: _getSuitableWidth()),
                         // SizeUtils.getDevicesWidthPx()
                         child: Text(
-                          getUrl(index),
+                          _getUrl(index),
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
                           textAlign: TextAlign.left,
@@ -212,16 +257,16 @@ class VideoPageState extends State<VideoPage>
                               decoration: TextDecoration.underline),
                         ),
                       ),
-                      Padding(
-                        child: Transform.translate(
-                          offset: Offset(_xHandImgOffset, 0.0),
-                          child: Image.asset(
-                              'assets/images/img_hand_2_left.png',
-                              height: 16,
-                              width: 16),
-                        ),
-                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                      ),
+//                      Padding(
+//                        child: Transform.translate(
+//                          offset: Offset(_xHandImgOffset, 0.0),
+//                          child: Image.asset(
+//                              'assets/images/img_hand_2_left.png',
+//                              height: 16,
+//                              width: 16),
+//                        ),
+//                        padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+//                      ),
                     ],
                   ),
                   onTap: () {
@@ -229,18 +274,14 @@ class VideoPageState extends State<VideoPage>
                         context,
                         new MaterialPageRoute(
                             builder: (context) =>
-                                new WebViewPage(getUrl(index))));
+                                new GankWebViewPage(_getUrl(index))));
                   },
                 ))),
-        new Divider(
-          height: 1,
-          color: Color(0x66000000),
-        ),
       ],
     );
   }
 
-  double getSuitableWidth() {
+  double _getSuitableWidth() {
     double width = MediaQuery.of(context).size.width;
     print("getSuitableWidth,$width");
     width = width / 7.0 * 5.0;

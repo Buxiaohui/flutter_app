@@ -72,7 +72,11 @@ class BenifitPageState extends State<BenifitChildPage> {
                   width: double.infinity,
                   height: double.infinity,
                 ),
+//                child: FadeInImage.memoryNetwork(
+                // placeholder: kTransparentImage,
+//                  image: 'https://picsum.photos/250?image=9',
               ),
+//              ),
               onLongPress: () {
                 DownloadHelper.onImageLongPressed(context, data.url);
               },

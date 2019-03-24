@@ -27,12 +27,11 @@ class TodayGankPage extends StatefulWidget {
 
 class TodayGankPageState extends State<TodayGankPage>
     with SingleTickerProviderStateMixin {
-  int _currentPageIndex = 0;
-  // var _pageController = new PageController(initialPage: 0);
   TodayGankModel _todayGankModel;
   List<Text> _tabTitleWidgetList;
   HashMap<String, dynamic> _pageMap;
   final List<Tab> tabs = [];
+  TabController _tabController;
 
   @override
   void initState() {
@@ -40,30 +39,37 @@ class TodayGankPageState extends State<TodayGankPage>
     print("***********initState***********");
     _pageMap = new HashMap<String, dynamic>();
     _tabTitleWidgetList = new List();
-    for (int i = 0; i < ModeHelper.TITLES.length; i++) {
-      _tabTitleWidgetList.add(
-          new Text(ModeHelper.TITLES[i], style: new TextStyle(fontSize: 20.0)));
-      tabs.add(new Tab(child: _tabTitleWidgetList[i]));
-    }
-    NetController.request(NetConstants.TODAY_GANK_URL,
-        (request, response, bodyData) {
+
+    NetController.request(NetConstants.TODAY_GANK_URL, 0,
+        (request, response, bodyData, requestType) {
       try {
         print("***********initState request data***********");
         _todayGankModel = TodayGankModel.fromJson(json.decode(bodyData));
       } catch (exception) {
         print("initState,error,$exception");
       }
+      if (_todayGankModel != null && _todayGankModel.category.length > 0) {
+        for (int i = 0; i < _todayGankModel.category.length; i++) {
+          BasePageMixin childPage = getTabPage(_todayGankModel.category[i]);
+          _pageMap[_todayGankModel.category[i]] = childPage;
 
+          _tabTitleWidgetList.add(new Text(_todayGankModel.category[i],
+              style: new TextStyle(fontSize: 20.0)));
+          tabs.add(new Tab(child: _tabTitleWidgetList[i]));
+        }
+      }
+      _tabController =
+          TabController(length: tabs.length, initialIndex: 0, vsync: this);
+      _tabController.addListener(() {
+        print("initState,_tabController");
+      });
       print("initState,setState,_todayGankModel,$_todayGankModel");
       setState(() {
-        if (_todayGankModel != null && _todayGankModel.category.length > 0) {
-          for (int i = 0; i < _todayGankModel.category.length; i++) {
-            BasePageMixin childPage = getTabPage(_todayGankModel.category[i]);
-            _pageMap[_todayGankModel.category[i]] = childPage;
-          }
-        }
+        print("initState,setState");
       });
     });
+    _tabController =
+        TabController(length: tabs.length, initialIndex: 0, vsync: this);
   }
 
   BasePageMixin getTabPage(String category) {
@@ -144,8 +150,13 @@ class TodayGankPageState extends State<TodayGankPage>
 
   @override
   Widget build(BuildContext context) {
-//    return WillPopScope(
-//        child: new MaterialApp(
+    if (tabs == null || tabs.length <= 0) {
+      return Card(
+        child: Text("全尼玛是空的…………"),
+      );
+    }
+    print("tabs.length:" + tabs.length.toString());
+    print("tabs.length:" + tabs.toString());
     return new DefaultTabController(
       length: tabs.length,
       child: new Scaffold(
@@ -153,11 +164,13 @@ class TodayGankPageState extends State<TodayGankPage>
           title: new Text("今日干货"),
           centerTitle: false,
           bottom: new TabBar(
+            controller: _tabController,
             isScrollable: true,
             tabs: tabs,
           ),
         ),
         body: new TabBarView(
+          controller: _tabController,
           children: _tabTitleWidgetList.map((Text titleTextWidget) {
             return new Center(child: _pageMap[titleTextWidget.data]);
           }).toList(),
@@ -202,5 +215,12 @@ class TodayGankPageState extends State<TodayGankPage>
       return 0;
     }
     return _todayGankModel.category.length;
+  }
+
+  //当整个页面dispose时，记得把控制器也dispose掉，释放内存
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 }
