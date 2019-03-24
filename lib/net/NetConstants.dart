@@ -7,4 +7,5 @@ class NetConstants {
       "http://gank.io/api/xiandu/categories";
   static String RELAX_READ_CHILD_CATEGORY_BASE_URL =
       "http://gank.io/api/xiandu/category/";
+  static String BENIFIT_BASE_URL = "http://gank.io/api/data/福利/";
 }

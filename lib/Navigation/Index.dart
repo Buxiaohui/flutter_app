@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Navigation/NavigationBar.dart';
-import 'package:flutter_app/page/Benifit.dart';
 import 'package:flutter_app/page/MinePage.dart';
+import 'package:flutter_app/page/benifit_page.dart';
 import 'package:flutter_app/page/read/relax_read.dart';
 import 'package:flutter_app/page/relax_video/VideoPage.dart';
 import 'package:flutter_app/page/today_gank/today_gank_page.dart';
@@ -52,7 +52,7 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
       new NavigationBar(
           icon: new Icon(Icons.account_balance),
           backgroundColor: Colors.deepPurpleAccent,
-          title: new Text("主页"),
+          title: new Text("福利"),
           vsync: this),
       new NavigationBar(
           icon: new Icon(Icons.video_label),
@@ -75,7 +75,7 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
     _pageList = <StatefulWidget>[
       new TodayGankPage(),
       new RelaxReadPage(),
-      new Benifit(),
+      new BenifitPage(),
       new VideoPage(),
       new MinePage(),
     ];

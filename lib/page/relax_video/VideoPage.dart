@@ -84,6 +84,10 @@ class VideoPageState extends State<VideoPage>
     _request(0);
 
     _scrollController.addListener(() {
+      print('_scrollController.position.pixels ' +
+          _scrollController.position.pixels.toString());
+      print(' _scrollController.position.maxScrollExtent' +
+          _scrollController.position.maxScrollExtent.toString());
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         print('滑动到了最底部');

@@ -109,8 +109,8 @@ class _MyListState extends State<RelaxReadBaseChildPage>
               child: Image.network(
                 getIconUrl(index),
                 fit: BoxFit.cover,
-//              width: double.infinity,
-//              height: double.infinity,
+                width: 80,
+                height: 80,
               ),
             ),
             Text(getTitle(index)),
