@@ -98,34 +98,48 @@ class _MyListState extends State<RelaxReadBaseChildPage>
   //ListView的Item
   Widget getItemUserDefine(BuildContext context, int index) {
     // 根据文档描述，没有指定card的shape屎，使用主题默认的shape，是一个圆角的shape，圆角4dp
-    return Card(
-      elevation: 4,
-      margin: EdgeInsets.fromLTRB(8, 4, 8, 4),
-      child: GestureDetector(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            textDirection: TextDirection.ltr,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                child: Image.network(
-                  getIconUrl(index),
-                  fit: BoxFit.cover,
-                  width: 80,
-                  height: 80,
-                ),
+    return GestureDetector(
+      child: Card(
+        elevation: 4,
+        margin: EdgeInsets.fromLTRB(8, 4, 8, 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+              child: Image.network(
+                getIconUrl(index),
+                fit: BoxFit.cover,
+                width: 80,
+                height: 80,
               ),
-              Text(getTitle(index)),
-              Text(getPublishedAt(index)),
-            ]),
-        onTap: () {
-          Navigator.push(context, new MaterialPageRoute(builder: (context) {
-            RelaxReadDetailPage page = new RelaxReadDetailPage();
-            page.category = _datas[index].id;
-            return page;
-          }));
-        },
+            ),
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                textDirection: TextDirection.ltr,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    getTitle(index),
+                    textAlign: TextAlign.left,
+                    textDirection: TextDirection.rtl,
+                    style: TextStyle(
+                      color: Color(0xff00ff00),
+                    ),
+                  ),
+                  Text(getPublishedAt(index)),
+                ]),
+          ],
+        ),
       ),
+      onTap: () {
+        Navigator.push(context, new MaterialPageRoute(builder: (context) {
+          RelaxReadDetailPage page = new RelaxReadDetailPage();
+          page.category = _datas[index].id;
+          return page;
+        }));
+      },
     );
   }
 

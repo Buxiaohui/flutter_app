@@ -150,7 +150,7 @@ class RelaxReadDetailPageState extends State<RelaxReadDetailPage>
         return mode.raw;
       }
     }
-    return "";
+    return "内容缺失，请点击下方链接访问原文";
   }
 
   String _getPublishedAt(int index) {

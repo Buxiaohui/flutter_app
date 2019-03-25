@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/BenifitMode.dart';
 import 'package:flutter_app/net/NetConstants.dart';
 import 'package:flutter_app/net/NetController.dart';
+import 'package:flutter_app/page/benifit/benifit_detail_page.dart';
 import 'package:flutter_app/utils/DownloadHelper.dart';
 
 class BenifitPage extends StatefulWidget {
@@ -99,7 +100,7 @@ class BenifitPageState extends State<BenifitPage>
             padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
             // 整体的padding，非每个item
             children: _datas.map((BenifitMode mode) {
-              return _getItemView(context, mode);
+              return _getItemView(context, mode, _datas.indexOf(mode));
             }).toList(),
           ),
           onRefresh: () {
@@ -131,9 +132,16 @@ class BenifitPageState extends State<BenifitPage>
     return "";
   }
 
-  Widget _getItemView(BuildContext context, BenifitMode data) {
+  Widget _getItemView(BuildContext context, BenifitMode data, int index) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          BenifitDetailPage page = new BenifitDetailPage();
+          page.datas = _datas;
+          page.initialPage = index;
+          return page;
+        }));
+      },
       child: Card(
         elevation: 4,
         child: Stack(

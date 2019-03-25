@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Navigation/NavigationBar.dart';
 import 'package:flutter_app/page/MinePage.dart';
-import 'package:flutter_app/page/benifit_page.dart';
+import 'package:flutter_app/page/benifit/benifit_page.dart';
 import 'package:flutter_app/page/read/relax_read.dart';
 import 'package:flutter_app/page/relax_video/VideoPage.dart';
 import 'package:flutter_app/page/today_gank/today_gank_page.dart';
