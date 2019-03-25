@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_app/bean/ReadCategoryChild.dart';
 import 'package:flutter_app/net/NetConstants.dart';
 import 'package:flutter_app/net/NetController.dart';
+import 'package:flutter_app/page/read/relax_read_detail_page.dart';
 
 class RelaxReadBaseChildPage extends StatefulWidget {
   RelaxReadBaseChildPage({Key key}) : super(key: key);
@@ -100,22 +101,31 @@ class _MyListState extends State<RelaxReadBaseChildPage>
     return Card(
       elevation: 4,
       margin: EdgeInsets.fromLTRB(8, 4, 8, 4),
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          textDirection: TextDirection.ltr,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-              child: Image.network(
-                getIconUrl(index),
-                fit: BoxFit.cover,
-                width: 80,
-                height: 80,
+      child: GestureDetector(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            textDirection: TextDirection.ltr,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                child: Image.network(
+                  getIconUrl(index),
+                  fit: BoxFit.cover,
+                  width: 80,
+                  height: 80,
+                ),
               ),
-            ),
-            Text(getTitle(index)),
-            Text(getPublishedAt(index)),
-          ]),
+              Text(getTitle(index)),
+              Text(getPublishedAt(index)),
+            ]),
+        onTap: () {
+          Navigator.push(context, new MaterialPageRoute(builder: (context) {
+            RelaxReadDetailPage page = new RelaxReadDetailPage();
+            page.category = _datas[index].id;
+            return page;
+          }));
+        },
+      ),
     );
   }
 
