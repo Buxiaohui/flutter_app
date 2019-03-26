@@ -149,17 +149,20 @@ class BenifitPageState extends State<BenifitPage>
             GestureDetector(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
-                child: Image.network(
-                  data.url,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
+//                child: Image.network(
+//                  data.url,
+//                  fit: BoxFit.cover,
+//                  width: double.infinity,
+//                  height: double.infinity,
+//                ),
+                child: FadeInImage.assetNetwork(
                   height: double.infinity,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: 'assets/images/image_place_holder.png',
+                  image: data.url,
                 ),
-//                child: FadeInImage.memoryNetwork(
-                // placeholder: kTransparentImage,
-//                  image: 'https://picsum.photos/250?image=9',
               ),
-//              ),
               onLongPress: () {
                 DownloadHelper.onImageLongPressed(context, data.url);
               },

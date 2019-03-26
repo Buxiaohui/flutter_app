@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_app/bean/TodayGankBaseChildModel.dart';
 import 'package:flutter_app/page/base_page_mixin.dart';
 import 'package:flutter_app/utils/DownloadHelper.dart';
+// import 'package:transparent_image/transparent_image.dart';
 
 class BenifitChildPage extends StatefulWidget with BasePageMixin {
   BenifitChildPage({Key key}) : super(key: key);
@@ -47,7 +48,8 @@ class BenifitPageState extends State<BenifitChildPage> {
       // item 垂直方向的间隔距离
       crossAxisSpacing: 2,
       // item 水平方向的间隔距离
-//      childAspectRatio: 2/5,// 宽高比
+      childAspectRatio: 1.0,
+      // 宽高比,默认是1
       padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
       // 整体的padding，非每个item
       children: widget.items.map((BaseItemModel mode) {
@@ -66,17 +68,19 @@ class BenifitPageState extends State<BenifitChildPage> {
             GestureDetector(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
-                child: Image.network(
-                  data.url,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                ),
+                // kTransparentImage 来自系统提供
 //                child: FadeInImage.memoryNetwork(
-                // placeholder: kTransparentImage,
-//                  image: 'https://picsum.photos/250?image=9',
+//                    placeholder: kTransparentImage, image: data.url),
+                child: FadeInImage.assetNetwork(
+                  height: double.infinity,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  fadeInCurve: Curves.linear,
+                  fadeInDuration: const Duration(milliseconds: 1500),
+                  placeholder: 'assets/images/image_place_holder.png',
+                  image: data.url,
+                ),
               ),
-//              ),
               onLongPress: () {
                 DownloadHelper.onImageLongPressed(context, data.url);
               },

@@ -39,7 +39,14 @@ class TodayGankPageState extends State<TodayGankPage>
     print("***********initState***********");
     _pageMap = new HashMap<String, dynamic>();
     _tabTitleWidgetList = new List();
+    _future = _request();
+    _tabController =
+        TabController(length: tabs.length, initialIndex: 0, vsync: this);
+  }
 
+  Future<void> _future;
+
+  Future<void> _request() async {
     NetController.request(NetConstants.TODAY_GANK_URL, 0,
         (request, response, bodyData, requestType) {
       try {
@@ -68,8 +75,6 @@ class TodayGankPageState extends State<TodayGankPage>
         print("initState,setState");
       });
     });
-    _tabController =
-        TabController(length: tabs.length, initialIndex: 0, vsync: this);
   }
 
   BasePageMixin getTabPage(String category) {
@@ -150,11 +155,26 @@ class TodayGankPageState extends State<TodayGankPage>
 
   @override
   Widget build(BuildContext context) {
-    if (tabs == null || tabs.length <= 0) {
-      return Card(
-        child: Text("全尼玛是空的…………"),
-      );
-    }
+    FutureBuilder futureBuilder = FutureBuilder<void>(
+        future: _future,
+        builder: (BuildContext context, AsyncSnapshot<void> asyncSnapshot) {
+          switch (asyncSnapshot.connectionState) {
+            case ConnectionState.none:
+              return Text("ConnectionState.none");
+            case ConnectionState.active:
+              return Text("ConnectionState.active");
+            case ConnectionState.done:
+              return _getItem();
+            case ConnectionState.waiting:
+              return Text("ConnectionState.waiting");
+            default:
+              return Text("ConnectionState.default");
+          }
+        });
+    return futureBuilder;
+  }
+
+  _getItem() {
     print("tabs.length:" + tabs.length.toString());
     print("tabs.length:" + tabs.toString());
     return new DefaultTabController(

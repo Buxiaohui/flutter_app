@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/BenifitMode.dart';
 import 'package:flutter_app/utils/DownloadHelper.dart';
@@ -25,6 +26,7 @@ class BenifitDetailPageState extends State<BenifitDetailPage>
 
   @override
   Widget build(BuildContext context) {
+    final AsyncMemoizer _memoizer = AsyncMemoizer();
     return MaterialApp(
       home: new Scaffold(
           appBar: AppBar(
