@@ -128,7 +128,10 @@ class _MyListState extends State<RelaxReadBaseChildPage>
                       color: Color(0xff00ff00),
                     ),
                   ),
-                  Text(getPublishedAt(index)),
+                  Tooltip(
+                    child: Text(getPublishedAt(index)),
+                    message: "发布时间",
+                  ),
                 ]),
           ],
         ),

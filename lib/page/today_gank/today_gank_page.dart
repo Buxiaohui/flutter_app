@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/ModeHelper.dart';
 import 'package:flutter_app/bean/TodayGankBaseChildModel.dart';
@@ -36,24 +37,34 @@ class TodayGankPageState extends State<TodayGankPage>
   @override
   void initState() {
     super.initState();
-    print("***********initState***********");
+    print("***********initState()***********");
     _pageMap = new HashMap<String, dynamic>();
     _tabTitleWidgetList = new List();
-    _future = _request();
-    _tabController =
-        TabController(length: tabs.length, initialIndex: 0, vsync: this);
+    _asyncMemoizer = AsyncMemoizer();
+    _voidCallback = () {
+      print("initState,_tabControllert" + tabs.toString());
+    };
   }
 
-  Future<void> _future;
+  AsyncMemoizer _asyncMemoizer;
+
+  // TODO error
+  _requestInner() {
+    print("***********_requestInner***********");
+    return _asyncMemoizer.runOnce(() {
+      return _request();
+    });
+  }
 
   Future<void> _request() async {
+    print("***********_request request data AAAAAA***********");
     NetController.request(NetConstants.TODAY_GANK_URL, 0,
         (request, response, bodyData, requestType) {
       try {
-        print("***********initState request data***********");
+        print("***********_request request data***********");
         _todayGankModel = TodayGankModel.fromJson(json.decode(bodyData));
       } catch (exception) {
-        print("initState,error,$exception");
+        print("_request,error,$exception");
       }
       if (_todayGankModel != null && _todayGankModel.category.length > 0) {
         for (int i = 0; i < _todayGankModel.category.length; i++) {
@@ -67,15 +78,16 @@ class TodayGankPageState extends State<TodayGankPage>
       }
       _tabController =
           TabController(length: tabs.length, initialIndex: 0, vsync: this);
-      _tabController.addListener(() {
-        print("initState,_tabController");
-      });
-      print("initState,setState,_todayGankModel,$_todayGankModel");
+      _tabController.removeListener(_voidCallback);
+      _tabController.addListener(_voidCallback);
+      print("_request,setState,_todayGankModel,$_todayGankModel");
       setState(() {
-        print("initState,setState");
+        print("_request,setState");
       });
     });
   }
+
+  VoidCallback _voidCallback;
 
   BasePageMixin getTabPage(String category) {
     switch (category) {
@@ -156,8 +168,9 @@ class TodayGankPageState extends State<TodayGankPage>
   @override
   Widget build(BuildContext context) {
     FutureBuilder futureBuilder = FutureBuilder<void>(
-        future: _future,
+        future: _request(),
         builder: (BuildContext context, AsyncSnapshot<void> asyncSnapshot) {
+          print("build,,," + asyncSnapshot.connectionState.toString());
           switch (asyncSnapshot.connectionState) {
             case ConnectionState.none:
               return Text("ConnectionState.none");
