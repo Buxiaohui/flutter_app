@@ -6,6 +6,9 @@ printInteger(int aNumber) {
 
 // This is where the app starts executing.
 main() {
+  int _ad = 0;
+  print(_ad.toString());
+  print("-------");
   var number = 42; // Declare and initialize a variable.
   printInteger(number); // Call a function.
 

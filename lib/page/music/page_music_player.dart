@@ -7,19 +7,19 @@ import 'package:flutter_app/utils/LogUtils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 
-class FlutterFirst extends StatefulWidget {
-  FlutterFirst();
+class MusicPage extends StatefulWidget {
+  MusicPage();
 
-  factory FlutterFirst.forDesignTime() {
+  factory MusicPage.forDesignTime() {
     // TODO: add arguments
-    return new FlutterFirst();
+    return new MusicPage();
   }
 
   @override
   State<StatefulWidget> createState() => new _MyFlutterFlutterFirstState();
 }
 
-class _MyFlutterFlutterFirstState extends State<FlutterFirst>
+class _MyFlutterFlutterFirstState extends State<MusicPage>
     with TickerProviderStateMixin {
   static final String TAG = "BXH_AUDIO_PLAYER";
   Animation<Color> _changeColor;
@@ -379,18 +379,6 @@ class _MyFlutterFlutterFirstState extends State<FlutterFirst>
             ),
             onTap: () {
               Fluttertoast.showToast(msg: "index $index");
-              switch (index) {
-                case 0:
-                  break;
-                case 1:
-                  break;
-                case 2:
-                  break;
-                case 3:
-                  break;
-                default:
-                  break;
-              }
             }),
       ),
     );
@@ -470,4 +458,4 @@ class _MyFlutterFlutterFirstState extends State<FlutterFirst>
   }
 }
 
-void main() => runApp(FlutterFirst());
+void main() => runApp(MusicPage());
