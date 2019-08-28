@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/ReadCategory.dart';
 import 'package:flutter_app/net/NetConstants.dart';
 import 'package:flutter_app/net/NetController.dart';
+import 'package:flutter_app/page/blank_page.dart';
 import 'package:flutter_app/page/read/relax_read_child_page.dart';
 
 void main() => runApp(RelaxReadPage());
@@ -89,8 +90,8 @@ class RelaxReadPageState extends State<RelaxReadPage>
   @override
   Widget build(BuildContext context) {
     if (tabs == null || tabs.length <= 0) {
-      return Card(
-        child: Text("全尼玛是空的…………"),
+      return BlankPage(
+        pageState: 2,
       );
     }
     print("tabs.length:" + tabs.length.toString());
@@ -121,19 +122,19 @@ class RelaxReadPageState extends State<RelaxReadPage>
     return showDialog(
           context: context,
           builder: (context) => new AlertDialog(
-                title: new Text('Are you sure?'),
-                content: new Text('Do you want to exit an App'),
-                actions: <Widget>[
-                  new FlatButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: new Text('No'),
-                  ),
-                  new FlatButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: new Text('Yes'),
-                  ),
-                ],
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
               ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
         ) ??
         false;
   }

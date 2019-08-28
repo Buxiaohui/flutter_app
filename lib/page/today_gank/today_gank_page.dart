@@ -12,6 +12,8 @@ import 'package:flutter_app/page/base_page_mixin.dart';
 import 'package:flutter_app/page/today_gank/benifit_child_page.dart';
 import 'package:flutter_app/page/today_gank/today_base_child_page.dart';
 
+import '../blank_page.dart';
+
 void main() => runApp(TodayGankPage());
 
 class TodayGankPage extends StatefulWidget {
@@ -27,17 +29,20 @@ class TodayGankPage extends StatefulWidget {
 }
 
 class TodayGankPageState extends State<TodayGankPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   TodayGankModel _todayGankModel;
   List<Text> _tabTitleWidgetList;
   HashMap<String, dynamic> _pageMap;
   final List<Tab> tabs = [];
+  Future<void> _mFuture;
+
   TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     print("***********initState()***********");
+    _mFuture = _request(); // 防止setState后触发build，导致不停请求数据
     _pageMap = new HashMap<String, dynamic>();
     _tabTitleWidgetList = new List();
     _asyncMemoizer = AsyncMemoizer();
@@ -65,6 +70,11 @@ class TodayGankPageState extends State<TodayGankPage>
         _todayGankModel = TodayGankModel.fromJson(json.decode(bodyData));
       } catch (exception) {
         print("_request,error,$exception");
+      }
+      print("_request,tabs.length:" + tabs.length.toString());
+      print("_request,tabs.length:" + tabs.toString());
+      if (tabs != null) {
+        tabs.clear();
       }
       if (_todayGankModel != null && _todayGankModel.category.length > 0) {
         for (int i = 0; i < _todayGankModel.category.length; i++) {
@@ -167,19 +177,20 @@ class TodayGankPageState extends State<TodayGankPage>
 
   @override
   Widget build(BuildContext context) {
+    print("TodayGankPage,build");
     FutureBuilder futureBuilder = FutureBuilder<void>(
-        future: _request(),
+        future: _mFuture,
         builder: (BuildContext context, AsyncSnapshot<void> asyncSnapshot) {
           print("build,,," + asyncSnapshot.connectionState.toString());
           switch (asyncSnapshot.connectionState) {
             case ConnectionState.none:
-              return Text("ConnectionState.none");
+              return BlankPage(pageState: BlankPage.FAIL);
             case ConnectionState.active:
-              return Text("ConnectionState.active");
+              return BlankPage(pageState: BlankPage.LOADING);
             case ConnectionState.done:
               return _getItem();
             case ConnectionState.waiting:
-              return Text("ConnectionState.waiting");
+              return BlankPage(pageState: BlankPage.LOADING);
             default:
               return Text("ConnectionState.default");
           }
@@ -188,8 +199,11 @@ class TodayGankPageState extends State<TodayGankPage>
   }
 
   _getItem() {
-    print("tabs.length:" + tabs.length.toString());
-    print("tabs.length:" + tabs.toString());
+    print("_getItem,tabs.length:" + tabs.length.toString());
+    print("_getItem,tabs.length:" + tabs.toString());
+    if (tabs == null || tabs.length < 1) {
+      return BlankPage(pageState: BlankPage.FAIL);
+    }
     return new DefaultTabController(
       length: tabs.length,
       child: new Scaffold(
@@ -216,19 +230,19 @@ class TodayGankPageState extends State<TodayGankPage>
     return showDialog(
           context: context,
           builder: (context) => new AlertDialog(
-                title: new Text('Are you sure?'),
-                content: new Text('Do you want to exit an App'),
-                actions: <Widget>[
-                  new FlatButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: new Text('No'),
-                  ),
-                  new FlatButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: new Text('Yes'),
-                  ),
-                ],
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
               ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
         ) ??
         false;
   }

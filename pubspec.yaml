@@ -97,6 +97,13 @@ flutter:
      # video
      - assets/videos/QQ20181220-120707-HD.mp4
      - assets/videos/test_video_01.mp4
+     # error
+     - assets/images/error.png
+     # link
+     - assets/images/link.png
+     - assets/images/calendar.png
+     - assets/images/author.png
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

@@ -1,0 +1,4 @@
+ext { //仓库选择标记
+    repoType = "remote" //发布到远程仓库
+//    repoType = "local" //发布到本地仓库，
+}

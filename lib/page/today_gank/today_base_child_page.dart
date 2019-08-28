@@ -160,7 +160,7 @@ class _MyListState extends State<TodayGankBaseChildPage>
         index < 0) {
       return "";
     }
-    return "作者:" + widget.items[index].who;
+    return "" + widget.items[index].who;
   }
 
   String getPublishedAt(int index) {
@@ -170,7 +170,7 @@ class _MyListState extends State<TodayGankBaseChildPage>
         index < 0) {
       return "";
     }
-    return "发布日期:" + widget.items[index].publishedAt.substring(0, 10);
+    return "" + widget.items[index].publishedAt.substring(0, 10);
   }
 
   //ListView的Item
@@ -186,105 +186,121 @@ class _MyListState extends State<TodayGankBaseChildPage>
           new Column(
             children: <Widget>[
               new Padding(
+                  // 描述
                   padding: const EdgeInsets.all(16),
                   child: Text(
                     getDesc(index),
                     softWrap: true,
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   )),
               new Row(
+                // 作者
                 children: <Widget>[
+                  Container(
+                    child: Image.asset('assets/images/author.png',
+                        height: 16, width: 16),
+                    margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  ),
                   new Expanded(
                       child: new Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 5, 16, 0),
+                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                           child: new Directionality(
                               textDirection: TextDirection.rtl,
                               child: Text(getWho(index),
                                   softWrap: true, textAlign: TextAlign.left))))
                 ],
               ),
-              new Row(
-                children: <Widget>[
-                  new Expanded(
-                      child: new Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 5, 16, 2),
-                          child: new Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: Text(getPublishedAt(index),
-                                  softWrap: true, textAlign: TextAlign.left))))
-                ],
-              )
-            ],
-          ),
-          new Column(
-            children: new List.generate(getImageCount(index), (int imgIndex) {
-              String url = getImageUrl(index, imgIndex);
-              return new GestureDetector(
-                  child: Image.network(url),
-                  onLongPress: () {
-                    if (ModeHelper.BENIFIT == widget.title) {
-                      DownloadHelper.onImageLongPressed(context, url);
-                    } else {
-                      String title = widget.title;
-                      print("title is $title");
-                    }
-                  });
-            }),
-          ),
-          Container(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context)
-                      .size
-                      .width), // SizeUtils.getDevicesWidthPx()
-              child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 5, 16, 10),
-                  child: new GestureDetector(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Text("link:"),
-                        Container(
-                          constraints:
-                              BoxConstraints(maxWidth: getSuitableWidth()),
-                          // SizeUtils.getDevicesWidthPx()
-                          child: Text(
-                            getUrl(index),
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            textAlign: TextAlign.left,
-                            maxLines: 3,
-                            style: new TextStyle(
-                                color: Colors.red,
-                                decoration: TextDecoration.underline),
-                          ),
-                        ),
-                        Padding(
-                          child: Transform.translate(
-                            offset: Offset(_xHandImgOffset, 0.0),
-                            child: Image.asset(
-                                'assets/images/img_hand_2_left.png',
-                                height: 16,
-                                width: 16),
-                          ),
-                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                        ),
-                      ],
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                child: new Row(
+                  // 发布时间
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      child: Image.asset('assets/images/calendar.png',
+                          height: 16, width: 16),
+                      margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                     ),
-                    onTap: () {
-                      Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (BuildContext context) {
-                        return new GankWebViewPage(getUrl(index));
-                      }));
+                    new Expanded(
+                        child: new Padding(
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            child: new Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: Text(getPublishedAt(index),
+                                    softWrap: true,
+                                    textAlign: TextAlign.left))))
+                  ],
+                ),
+              ),
+              Container(
+                  // 链接
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context)
+                          .size
+                          .width), // SizeUtils.getDevicesWidthPx()
+                  child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                      child: new GestureDetector(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Image.asset('assets/images/link.png',
+                                height: 16, width: 16),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                              constraints:
+                                  BoxConstraints(maxWidth: getSuitableWidth()),
+                              // SizeUtils.getDevicesWidthPx()
+                              child: Text(
+                                getUrl(index),
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                textAlign: TextAlign.left,
+                                maxLines: 1,
+                                style: new TextStyle(
+                                    color: Colors.red,
+                                    decoration: TextDecoration.underline),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(new MaterialPageRoute(
+                              builder: (BuildContext context) {
+                            return new GankWebViewPage(getUrl(index));
+                          }));
 
-                      /// 等同于下面的代码
-                      /// ---start---
+                          /// 等同于下面的代码
+                          /// ---start---
 //                      Navigator.push(
 //                          context,
 //                          new MaterialPageRoute(
 //                              builder: (context) =>
 //                                  new WebViewPage(getUrl(index))));
-                      /// ---end---
-                    },
-                  ))),
+                          /// ---end---
+                        },
+                      ))),
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
+            child: new Column(
+              // 图片
+              children: new List.generate(getImageCount(index), (int imgIndex) {
+                String url = getImageUrl(index, imgIndex);
+                return new GestureDetector(
+                    child: Image.network(url),
+                    onLongPress: () {
+                      if (ModeHelper.BENIFIT == widget.title) {
+                        DownloadHelper.onImageLongPressed(context, url);
+                      } else {
+                        String title = widget.title;
+                        print("title is $title");
+                      }
+                    });
+              }),
+            ),
+          ),
           new Divider(
             height: 1,
             color: Color(0x00000000),
