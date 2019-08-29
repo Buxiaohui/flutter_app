@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Navigation/NavigationBar.dart';
-import 'package:flutter_app/page/MinePage.dart';
 import 'package:flutter_app/page/benifit/benifit_page.dart';
+import 'package:flutter_app/page/mine/MinePage.dart';
 import 'package:flutter_app/page/read/relax_read.dart';
 import 'package:flutter_app/page/relax_video/VideoPage.dart';
 import 'package:flutter_app/page/today_gank/today_gank_page.dart';
@@ -134,19 +134,19 @@ class _IndexState extends State<Index> with TickerProviderStateMixin {
     return showDialog(
           context: context,
           builder: (context) => new AlertDialog(
-                title: new Text('Are you sure?'),
-                content: new Text('Do you want to exit an App'),
-                actions: <Widget>[
-                  new FlatButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: new Text('No'),
-                  ),
-                  new FlatButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: new Text('Yes'),
-                  ),
-                ],
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
               ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
         ) ??
         false;
   }

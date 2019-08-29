@@ -101,7 +101,7 @@ class VideoPageState extends State<VideoPage>
     return MaterialApp(
       home: new Scaffold(
         appBar: AppBar(
-          title: Text("Infinite ListView"),
+          title: Text("视频"),
         ),
         body: RefreshIndicator(
           child: new ListView.builder(

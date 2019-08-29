@@ -9,7 +9,7 @@ class BlankPage extends StatefulWidget {
   static const int FAIL = 1;
   static const int SUCCESS = 2;
   static const int UNKNOWN = 3;
-  void main() => runApp(new BlankPage());
+
   int pageState;
 
   BlankPage({int pageState}) : this.pageState = pageState;
@@ -43,3 +43,5 @@ class BlankPageState extends State<BlankPage> {
     }
   }
 }
+
+void main() => runApp(new BlankPage());

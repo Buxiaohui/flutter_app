@@ -7,7 +7,7 @@ description: A new Flutter application.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.0.0+1
+version: 1.1.0
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
@@ -103,6 +103,12 @@ flutter:
      - assets/images/link.png
      - assets/images/calendar.png
      - assets/images/author.png
+     # 我的
+     - assets/images/my_head.png
+     - assets/images/collect.png
+     - assets/images/arrow.png
+     - assets/images/about.png
+     - assets/images/head_bg.jpeg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
