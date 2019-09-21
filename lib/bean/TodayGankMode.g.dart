@@ -1,21 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'TodayGankModel.dart';
+part of 'TodayGankMode.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TodayGankModel _$TodayGankModelFromJson(Map<String, dynamic> json) {
-  return TodayGankModel(
-      (json['category'] as List)?.map((e) => e as String)?.toList(),
+TodayGankMode _$TodayGankModeFromJson(Map<String, dynamic> json) {
+  return TodayGankMode(
+      (json['category'] as List).map((e) => e as String).toList(),
       json['error'] as bool,
-      json['results'] == null
-          ? null
-          : ResultsModel.fromJson(json['results'] as Map<String, dynamic>));
+      ResultsMode.fromJson(json['results'] as Map<String, dynamic>));
 }
 
-Map<String, dynamic> _$TodayGankModelToJson(TodayGankModel instance) =>
+Map<String, dynamic> _$TodayGankModeToJson(TodayGankMode instance) =>
     <String, dynamic>{
       'category': instance.category,
       'error': instance.error,

@@ -1,5 +1,10 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'BenifitMode.g.dart';
+
+@JsonSerializable(nullable: false)
 class BenifitMode extends Object {
-  String _id;
+  String id;
   String createdAt;
   String desc;
   String publishedAt;
@@ -8,11 +13,17 @@ class BenifitMode extends Object {
   String url;
   bool used;
   String who;
+  bool select = false;
 
-  BenifitMode(this._id, this.url, this.publishedAt);
+  BenifitMode(this.id, this.url, this.publishedAt);
+
+  Map<String, dynamic> toJson() => _$BenifitModeToJson(this);
+
+  factory BenifitMode.fromJson(Map<String, dynamic> json) =>
+      _$BenifitModeFromJson(json);
 
   @override
   String toString() {
-    return 'BenifitMode{_id: $_id, publishedAt: $publishedAt, url: $url}';
+    return 'BenifitMode{_id: $id, publishedAt: $publishedAt, url: $url}';
   }
 }

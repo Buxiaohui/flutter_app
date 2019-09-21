@@ -1,9 +1,9 @@
 //1. 模仿MediaQuery。简单的让这个持有我们想要保存的data
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_app/bean/TodayGankModel.dart';
+import 'package:flutter_app/bean/TodayGankMode.dart';
 
 class InheritedStateContainer extends InheritedWidget {
-  final TodayGankModel data;
+  final TodayGankMode data;
 
   //我们知道InheritedWidget总是包裹的一层，所以它必有child
   InheritedStateContainer(

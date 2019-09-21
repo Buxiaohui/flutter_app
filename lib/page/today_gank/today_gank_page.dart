@@ -3,9 +3,9 @@ import 'dart:convert';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/bean/BaseItemMode.dart';
 import 'package:flutter_app/bean/ModeHelper.dart';
-import 'package:flutter_app/bean/TodayGankBaseChildModel.dart';
-import 'package:flutter_app/bean/TodayGankModel.dart';
+import 'package:flutter_app/bean/TodayGankMode.dart';
 import 'package:flutter_app/net/NetConstants.dart';
 import 'package:flutter_app/net/NetController.dart';
 import 'package:flutter_app/page/base_page_mixin.dart';
@@ -30,7 +30,7 @@ class TodayGankPage extends StatefulWidget {
 
 class TodayGankPageState extends State<TodayGankPage>
     with TickerProviderStateMixin {
-  TodayGankModel _todayGankModel;
+  TodayGankMode _todayGankModel;
   List<Text> _tabTitleWidgetList;
   HashMap<String, dynamic> _pageMap;
   final List<Tab> tabs = [];
@@ -67,7 +67,7 @@ class TodayGankPageState extends State<TodayGankPage>
         (request, response, bodyData, requestType) {
       try {
         print("***********_request request data***********");
-        _todayGankModel = TodayGankModel.fromJson(json.decode(bodyData));
+        _todayGankModel = TodayGankMode.fromJson(json.decode(bodyData));
       } catch (exception) {
         print("_request,error,$exception");
       }
@@ -146,7 +146,7 @@ class TodayGankPageState extends State<TodayGankPage>
     }
   }
 
-  List<BaseItemModel> getDatas(String category) {
+  List<BaseItemMode> getDatas(String category) {
     if (_todayGankModel == null ||
         _todayGankModel.results == null ||
         category == null ||

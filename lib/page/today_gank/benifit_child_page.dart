@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_app/bean/TodayGankBaseChildModel.dart';
+import 'package:flutter_app/bean/BaseItemMode.dart';
 import 'package:flutter_app/page/base_page_mixin.dart';
 import 'package:flutter_app/utils/DownloadHelper.dart';
 // import 'package:transparent_image/transparent_image.dart';
@@ -20,7 +20,7 @@ class BenifitChildPage extends StatefulWidget with BasePageMixin {
   }
 
   @override
-  void set items(List<BaseItemModel> _items) {
+  void set items(List<BaseItemMode> _items) {
     // TODO: implement items
     super.items = _items;
   }
@@ -52,13 +52,13 @@ class BenifitPageState extends State<BenifitChildPage> {
       // 宽高比,默认是1
       padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
       // 整体的padding，非每个item
-      children: widget.items.map((BaseItemModel mode) {
+      children: widget.items.map((BaseItemMode mode) {
         return _getItemView(context, mode);
       }).toList(),
     );
   }
 
-  Widget _getItemView(BuildContext context, BaseItemModel data) {
+  Widget _getItemView(BuildContext context, BaseItemMode data) {
     return InkWell(
       onTap: () {},
       child: Card(

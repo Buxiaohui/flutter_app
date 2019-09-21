@@ -1,24 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'RelaxVideoModels.dart';
+part of 'RelaxVideoModes.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-
-RelaxVideoModels _$RelaxVideoModelsFromJson(Map<String, dynamic> json) {
-  return RelaxVideoModels(
+RelaxVideoModes _$RelaxVideoModesFromJson(Map<String, dynamic> json) {
+  return RelaxVideoModes(
       json['count'] as int,
       json['error'] as bool,
       (json['results'] as List)
-      ?.map((e) => e == null
-      ? null
-      : BaseItemModel.fromJson(e as Map<String, dynamic>))
-      ?.toList());
+          .map((e) => BaseItemMode.fromJson(e as Map<String, dynamic>))
+          .toList());
 }
 
-Map<String, dynamic> _$RelaxVideoModelsToJson(RelaxVideoModels instance) =>
+Map<String, dynamic> _$RelaxVideoModesToJson(RelaxVideoModes instance) =>
     <String, dynamic>{
       'count': instance.count,
       'error': instance.error,

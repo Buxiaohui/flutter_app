@@ -1,10 +1,9 @@
-//part 'AndroidModel.g.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'TodayGankBaseChildModel.g.dart';
+part 'BaseItemMode.g.dart';
 
-@JsonSerializable()
-class BaseItemModel extends Object {
+@JsonSerializable(nullable: false)
+class BaseItemMode extends Object {
   String id;
   String createdAt;
   String desc;
@@ -16,14 +15,16 @@ class BaseItemModel extends Object {
   bool used;
   String who;
 
-  BaseItemModel(this.id, this.createdAt, this.desc, this.images,
+  BaseItemMode(this.id, this.createdAt, this.desc, this.images,
       this.publishedAt, this.source, this.type, this.url, this.used, this.who);
-
-  factory BaseItemModel.fromJson(Map<String, dynamic> json) =>
-      _$BaseItemModelFromJson(json);
 
   @override
   String toString() {
     return 'BaseItemModel{id: $id, createdAt: $createdAt, desc: $desc, images: $images, publishedAt: $publishedAt, source: $source, type: $type, url: $url, used: $used, who: $who}';
   }
+
+  factory BaseItemMode.fromJson(Map<String, dynamic> json) =>
+      _$BaseItemModeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BaseItemModeToJson(this);
 }

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/bean/RelaxVideoModels.dart';
-import 'package:flutter_app/bean/TodayGankBaseChildModel.dart';
+import 'package:flutter_app/bean/BaseItemMode.dart';
+import 'package:flutter_app/bean/RelaxVideoModes.dart';
 import 'package:flutter_app/net/NetConstants.dart';
 import 'package:flutter_app/net/NetController.dart';
 import 'package:flutter_app/page/webview_page.dart';
@@ -19,7 +19,7 @@ class VideoPageState extends State<VideoPage>
   AnimationController _animationController;
   Animation<double> _animation;
   double _xHandImgOffset = 0;
-  List<BaseItemModel> _items;
+  List<BaseItemMode> _items;
   int _page = 1;
   int _count = 10;
 
@@ -44,8 +44,8 @@ class VideoPageState extends State<VideoPage>
         // error
       }
       try {
-        RelaxVideoModels _relaxVideoModels =
-            RelaxVideoModels.fromJson(json.decode(bodyData));
+        RelaxVideoModes _relaxVideoModels =
+            RelaxVideoModes.fromJson(json.decode(bodyData));
         if (requestType == 0) {
           _items = _relaxVideoModels.results;
         } else {

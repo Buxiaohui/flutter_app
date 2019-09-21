@@ -3,8 +3,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app/bean/BaseItemMode.dart';
 import 'package:flutter_app/bean/ModeHelper.dart';
-import 'package:flutter_app/bean/TodayGankBaseChildModel.dart';
 import 'package:flutter_app/page/base_page_mixin.dart';
 import 'package:flutter_app/page/webview_page.dart';
 import 'package:flutter_app/utils/DownloadHelper.dart';
@@ -19,7 +19,7 @@ class TodayGankBaseChildPage extends StatefulWidget with BasePageMixin {
   }
 
   @override
-  void set items(List<BaseItemModel> _items) {
+  void set items(List<BaseItemMode> _items) {
     // TODO: implement items
     super.items = _items;
   }

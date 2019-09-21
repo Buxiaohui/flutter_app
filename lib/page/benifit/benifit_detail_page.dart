@@ -1,6 +1,7 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/BenifitMode.dart';
+import 'package:flutter_app/db/DBHelper.dart';
 import 'package:flutter_app/utils/DownloadHelper.dart';
 
 class BenifitDetailPage extends StatefulWidget {
@@ -14,10 +15,12 @@ class BenifitDetailPage extends StatefulWidget {
 class BenifitDetailPageState extends State<BenifitDetailPage>
     with SingleTickerProviderStateMixin {
   PageController _pageController;
+  DBHelper _dbHelper;
 
   @override
   void initState() {
     super.initState();
+    _dbHelper = new DBHelper();
     _pageController = new PageController(initialPage: widget.initialPage);
     _pageController.addListener(() {
       print("图片详情页……滑动啊啊啊啊");
@@ -49,8 +52,37 @@ class BenifitDetailPageState extends State<BenifitDetailPage>
 
   _getItem(BuildContext context, int index) {
     return Container(
-      child: Image.network(widget.datas[index].url),
+      child: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.center,
+            child: Image.network(
+              widget.datas[index].url,
+              fit: BoxFit.contain,
+              alignment: Alignment.center,
+            ),
+          ),
+          Align(
+              alignment: Alignment.bottomRight,
+              child: GestureDetector(
+                child: Image.asset("assets/images/collect_s.png"),
+                onTap: () {
+                  onCollectBtnClick(index);
+                },
+              )),
+        ],
+      ),
     );
+  }
+
+  void onCollectBtnClick(int index) async {
+    BenifitMode query_ret =
+        await _dbHelper.isCollectImgModeExist(widget.datas[index]);
+    print("query_ret $query_ret");
+    if (query_ret == null) {
+      int add_ret = await _dbHelper.addCollectImgMode(widget.datas[index]);
+      print("add_ret $add_ret");
+    }
   }
 
   int _getItemCount() {

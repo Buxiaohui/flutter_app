@@ -1,6 +1,6 @@
-import 'package:flutter_app/bean/TodayGankBaseChildModel.dart';
+import 'package:flutter_app/bean/BaseItemMode.dart';
 
 mixin BasePageMixin {
-  List<BaseItemModel> items;
+  List<BaseItemMode> items;
   String title;
 }
